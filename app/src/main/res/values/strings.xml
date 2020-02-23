@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">OneMenu</string>
+    <string name="emailEnglish">Email</string>
+    <string name="LoginFail">Login Fail</string>
+    <string name="android"> Android </string>
+    <string name="signOut"> Sign Out </string>
+
 </resources>
