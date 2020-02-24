@@ -1,3 +1,20 @@
 <resources>
     <string name="app_name">OneMenu</string>
+    <string name="password">password</string>
+    <string name="email">e-mail</string>
+    <string name="edit">edit</string>
+    <string name="meat">meat</string>
+    <string name="vegetable">vegetable</string>
+    <string name="misc">misc</string>
+    <string-array name="meat_arrays">
+        <item>beef</item>
+        <item>pork</item>
+        <item>chicken</item>
+        <item>fish</item>
+        <item>tofu</item>
+    </string-array>
+    <string name="title_activity_food__preference">Food_Preference</string>
+    <string name="title_activity_food_preference">FoodPreference</string>
+
+    <!--    <string name=""></string>-->
 </resources>
