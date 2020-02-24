@@ -8,10 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-
 import android.widget.Toast;
-
-
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
@@ -68,11 +65,4 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             }
         }
     }
-    public void changeActivity(View view){
-        Intent intent = new Intent(MainActivity.this, Profile.class);
-        startActivity(intent);
-        finish();
-    }
-
-
 }
