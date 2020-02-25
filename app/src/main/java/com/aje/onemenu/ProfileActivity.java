@@ -29,6 +29,7 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
     private TextView email;
     private TextView id;
     private Button signOutButton;
+    private Button EdgarButton;
 
     private GoogleApiClient googleApiClient;
     private GoogleSignInOptions gso;
@@ -65,6 +66,16 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
                             Toast.makeText(ProfileActivity.this, "Log Out Failed.", Toast.LENGTH_SHORT).show();
                     }
                 });
+            }
+        });
+
+        //Restaurants_menu Button
+        EdgarButton = findViewById(R.id.edgarButton);
+        EdgarButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(ProfileActivity.this, RestaurantsMenu.class);
+                startActivity(intent);
             }
         });
 
