@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
+
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
@@ -62,7 +63,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
                     finish();
                 }
                 else {
-                    Toast.makeText(this, "@String/LoginFail", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, R.string.LoginFail, Toast.LENGTH_SHORT).show();
                 }
             }
         }
