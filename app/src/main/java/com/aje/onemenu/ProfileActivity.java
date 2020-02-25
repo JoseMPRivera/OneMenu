@@ -30,6 +30,7 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
     private TextView id;
     private Button signOutButton;
     private Button EdgarButton;
+    private Button AlexButton;
 
     private GoogleApiClient googleApiClient;
     private GoogleSignInOptions gso;
@@ -79,6 +80,14 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
             }
         });
 
+        AlexButton = findViewById(R.id.alexButton);
+        AlexButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(ProfileActivity.this, FoodPreference.class);
+                startActivity(intent);
+            }
+        });
     }
 
     private void gotoMainActivity() {
