@@ -58,7 +58,7 @@ DatabaseReference reff;
         FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder().setPersistenceEnabled(true).build();
         db.setFirestoreSettings(settings);
         //https://www.youtube.com/watch?v=NWEfGZeDuAY
-        db.collection("products").get()
+        db.collection("restaurants").get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
@@ -69,7 +69,7 @@ DatabaseReference reff;
                                 Restaurant p = d.toObject(Restaurant.class);
                                 restaurantList.add(p);
 
-                                Log.d("hey", "test + " + p.getName());
+                                Log.d("test", "test + " + p.getName());
                             }
 
                         }
