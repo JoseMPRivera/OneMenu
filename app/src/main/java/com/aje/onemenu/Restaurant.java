@@ -2,14 +2,14 @@ package com.aje.onemenu;
 
 public class Restaurant {
 
-    private String name,address,description,website;
-    private int phone_number;
+    private String name,address,description,website,phone_number;
+
 
     public Restaurant(){
 
     }
 
-    public Restaurant(String name, String address, String description, String website, int phone_number) {
+    public Restaurant(String name, String address, String description, String website, String phone_number) {
         this.name = name;
         this.address = address;
         this.description = description;
@@ -33,7 +33,7 @@ public class Restaurant {
         return website;
     }
 
-    public int getPhone_number() {
+    public String getPhone_number() {
         return phone_number;
     }
 }
