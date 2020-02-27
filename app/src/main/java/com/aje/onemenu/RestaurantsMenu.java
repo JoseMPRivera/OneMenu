@@ -79,9 +79,14 @@ DatabaseReference reff;
 
                             for(DocumentSnapshot d: list){
                                 Restaurant p = d.toObject(Restaurant.class);
+
                                 restaurantList.add(p);
 
                                 Log.d("test", "test + " +  d.getId()+" "+ p.getName());
+
+                                in_n_out = findViewById(R.id.in_n_out);
+
+                                in_n_out.setText(d.getId() + "      " + p.getName() );
 
                             }
 
@@ -98,9 +103,7 @@ DatabaseReference reff;
 
     //jose
 
-        in_n_out = findViewById(R.id.in_n_out);
 
-        in_n_out.setText("lifhgldfkhgoikln dflkgjnglkdf dfnglkdfjgkln");
         //in_n_out.setText(restaurantList.get(0).getName());
         //jose
         Log.d("hey","hey");
