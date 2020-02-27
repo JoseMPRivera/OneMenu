@@ -6,13 +6,25 @@
     <string name="meat">meat</string>
     <string name="vegetable">vegetable</string>
     <string name="misc">misc</string>
-    <string-array name="meat_arrays">
-        <item>beef</item>
-        <item>pork</item>
-        <item>chicken</item>
-        <item>fish</item>
-        <item>tofu</item>
-    </string-array>
+
+<!--ingredients-->
+    <!--meats-->
+    <string name="chicken">chicken</string>
+    <string name="beef">beef</string>
+    <string name="pork">pork</string>
+    <string name="fish">fish</string>
+    <!--vegetables-->
+    <string name="tomato">tomato</string>
+    <string name="lettuce">lettuce</string>
+    <string name="onion">onion</string>
+    <string name="potato">potato</string>
+    <!--misc-->
+    <string name="ketchup">ketchup</string>
+    <string name="bun">bun</string>
+    <string name="mustard">mustard</string>
+    <string name="mayonnaise">mayonnaise</string>
+
+
     <string name="title_activity_food__preference">Food_Preference</string>
     <string name="title_activity_food_preference">FoodPreference</string>
 
@@ -21,5 +33,6 @@
     <string name="LoginFail">Login Fail</string>
     <string name="android"> Android </string>
     <string name="signOut"> Sign Out </string>
+    <string name="submit">submit</string>
 
 </resources>
