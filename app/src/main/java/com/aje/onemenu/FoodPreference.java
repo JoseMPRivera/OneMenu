@@ -1,18 +1,17 @@
 package com.aje.onemenu;
 
 import androidx.appcompat.app.AppCompatActivity;
-
+import android.content.Context;
 import android.os.Bundle;
-import android.text.Layout;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.EditText;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
-
+import android.widget.Toast;
+import com.google.android.material.tabs.TabLayout;
 import java.util.ArrayList;
 
 public class FoodPreference extends AppCompatActivity {
@@ -20,37 +19,93 @@ public class FoodPreference extends AppCompatActivity {
     private ArrayList<String> meats = new ArrayList<>();
     private ArrayList<String> veggie = new ArrayList<>();
     private ArrayList<String> misc = new ArrayList<>();
-    private String meat;
-    private ArrayList<String> my_meats = new ArrayList<>();
-    //create checkboxes from list of meats
-    //on update, add checked boxes to my_meats array
-    private boolean meatEdit = true;
-    private boolean meatPopulated = false;
-    private boolean veggieEdit = true;
-    private boolean veggiePopulated = false;
-    private boolean miscEdit = true;
-    private boolean miscPopulated = false;
-
+    private ArrayList<String> pmeats = new ArrayList<>();
+    private ArrayList<String> pveggie = new ArrayList<>();
+    private ArrayList<String> pmisc = new ArrayList<>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         addMeat();
         addVeggie();
         addMisc();
-        LinearLayout preferenceScreen = new LinearLayout(this);
+        final LinearLayout showMeat = showPreference(meats, pmeats);
+        final LinearLayout showVeggie = showPreference(veggie, pveggie);
+        final LinearLayout showMisc = showPreference(misc, pmisc);
+
+        final LinearLayout preferenceScreen = new LinearLayout(this);
         preferenceScreen.setOrientation(LinearLayout.VERTICAL);
-        LinearLayout showMeat = showPreference("meat", meats, meatEdit, meatPopulated);
-        LinearLayout showVeggie = showPreference("vegetables", veggie, veggieEdit, veggiePopulated);
-        LinearLayout showMisc = showPreference("misc", misc, miscEdit, miscPopulated);
-        preferenceScreen.addView(showMeat);
-        preferenceScreen.addView(showVeggie);
-        preferenceScreen.addView((showMisc));
+            final TabLayout tl = new TabLayout(this);
+            preferenceScreen.addView(tl);
+            final RelativeLayout rl = new RelativeLayout(this);
+            preferenceScreen.addView(rl);
+                rl.addView(showMeat);
+                rl.addView(showVeggie);
+                rl.addView(showMisc);
+
+        showVeggie.setVisibility(View.GONE);
+        showMisc.setVisibility(View.GONE);
+
+            final LinearLayout ll2 = new LinearLayout(this);
+            ll2.setOrientation(LinearLayout.VERTICAL);
+            preferenceScreen.addView(ll2);
+                LinearLayout ll3 = showPreferred(pmeats, "meat");
+                ll2.setOrientation(LinearLayout.VERTICAL);
+                ll2.addView(ll3);
+
+            tl.addTab(tl.newTab().setText("Protein"));
+            tl.addTab(tl.newTab().setText("Vegetable"));
+            tl.addTab(tl.newTab().setText("Extra"));
+            tl.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+                @Override
+                public void onTabSelected(TabLayout.Tab tab) {
+                    switch (tl.getSelectedTabPosition()){
+                        case 0:
+                            showVeggie.setVisibility(View.GONE);
+                            showMeat.setVisibility(View.VISIBLE);
+                            showMisc.setVisibility(View.GONE);
+                            break;
+                        case 1:
+                            showMeat.setVisibility(View.GONE);
+                            showVeggie.setVisibility(View.VISIBLE);
+                            showMisc.setVisibility(View.GONE);
+                            break;
+                        case 2:
+                            showMisc.setVisibility(View.VISIBLE);
+                            showVeggie.setVisibility(View.GONE);
+                            showMeat.setVisibility(View.GONE);
+                    }
+                }
+                @Override
+                public void onTabUnselected(TabLayout.Tab tab) {
+                }
+                @Override
+                public void onTabReselected(TabLayout.Tab tab) {
+                }
+            });
+
+        Button next = new Button(this);
+        next.setText(R.string.submit);
+        preferenceScreen.addView(next);
+        next.setOnClickListener(new View.OnClickListener(){
+            int[] list = {0};
+            @Override
+            public void onClick(View view) {
+                preferenceScreen.removeView(ll2);
+                ll2.removeAllViews();
+                LinearLayout list = ListOfPreferred();
+                ll2.addView(list);
+                preferenceScreen.addView(ll2);
+
+
+            }
+        });
+
+
+
 
 
         this.setContentView(preferenceScreen);
-
     }
     private void addMeat(){
         meats.add("pork");
@@ -88,78 +143,84 @@ public class FoodPreference extends AppCompatActivity {
     private void ingredientsView(){
 
     }
-    private LinearLayout showPreference(String name, final ArrayList<String> ingredients, boolean e, boolean p){
-        final int[] edit = {1};
-        final int[] populated = {0};
-        final LinearLayout rl = new LinearLayout(this);
-        rl.setOrientation(LinearLayout.VERTICAL);
+    private LinearLayout showPreference(ArrayList<String> ingredients, final ArrayList<String> pIngredients){
 
-        TextView tv1 = new TextView(this);
-        tv1.setText(name);
-        rl.addView(tv1);
+        LinearLayout ll = new LinearLayout(this);
+        ll.setOrientation(LinearLayout.VERTICAL);
 
-        final Button b = new Button(this);
-        b.setText(R.string.edit);
-        b.setLayoutParams(new LinearLayout.LayoutParams(300, 150));
-        rl.addView(b);
+        for (int i = 0; i < ingredients.size(); i++) {
+            final CheckBox cb = new CheckBox(getApplicationContext());
+            cb.setText(ingredients.get(i));
 
-        final LinearLayout scrollLayout = new LinearLayout(this);
-        //scrollLayout.setLayoutParams(new LinearLayout.LayoutParams(1300, 500));
-        scrollLayout.setVisibility(View.GONE);
+            cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                    if(b) {
+                        pIngredients.add(cb.getText().toString());
+                        Context context = getApplicationContext();
+                        CharSequence text = "selected " + cb.getText();
+                        int duration = Toast.LENGTH_SHORT;
 
-        rl.addView(scrollLayout);
-
-
-        ScrollView sv = new ScrollView(this);
-        sv.setLayoutParams(new LinearLayout.LayoutParams(1300,500));
-        sv.setScrollbarFadingEnabled(false);
-        scrollLayout.addView(sv);
-
-        final LinearLayout meatScroller = new LinearLayout(this);
-        meatScroller.setOrientation(LinearLayout.HORIZONTAL);
-        sv.addView(meatScroller);
-
-        final LinearLayout col1 = new LinearLayout(this);
-        col1.setOrientation(LinearLayout.VERTICAL);
-        meatScroller.addView(col1);
-
-        final LinearLayout col2 = new LinearLayout(this);
-        col2.setOrientation(LinearLayout.VERTICAL);
-        meatScroller.addView(col2);
-
-        b.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(edit[0] == 1) {
-                    b.setText(R.string.submit);
-                    scrollLayout.setVisibility(View.VISIBLE);
-                    if(populated[0] == 0){
-                        int altCol = 0;
-                        for (int i = 0; i < ingredients.size(); i++) {
-                            CheckBox cb = new CheckBox(getApplicationContext());
-                            cb.setText(ingredients.get(i));
-                            if(altCol == 0){
-                                col1.addView(cb);
-                                altCol = 1;
-                            }
-                            else {
-                                col2.addView(cb);
-                                altCol = 0;
-                            }
-                            populated[0] = 1;
-                        }
+                        Toast toast = Toast.makeText(context, text, duration);
+                        toast.show();
                     }
-                    edit[0] = 0;
-                }
-                else{
-                    b.setText(R.string.edit);
-                    scrollLayout.setVisibility(View.GONE);
-                    edit[0] = 1;
-                }
+                    else{
+                        pIngredients.remove(cb.getText().toString());
+                        Context context = getApplicationContext();
+                        CharSequence text = "unselected " + cb.getText();
+                        int duration = Toast.LENGTH_SHORT;
 
-            }
-        });
-    return rl;
+                        Toast toast = Toast.makeText(context, text, duration);
+                        toast.show();
+                    }
+                }
+            });
+            ll.addView(cb);
+        }
 
+        return ll;
     }
+    private LinearLayout showPreferred(ArrayList<String> list, String name){
+        LinearLayout ll = new LinearLayout(this);
+        ll.setOrientation(LinearLayout.HORIZONTAL);
+        //LinearLayout row = new LinearLayout(this);
+
+        for(int j = 0; j < list.size(); j++ ){
+            if(j == 0) {
+                TextView group  = new TextView(this);
+                group.setText(name + ": ");
+                group.setMaxLines(1);
+                ll.addView(group);
+                TextView tv = new TextView(this);
+                tv.setText(list.get(j));
+                tv.setMaxLines(1);
+                ll.addView(tv);
+            }else if(j%5 != 0){
+                TextView tv = new TextView(this);
+                tv.setText(", "+list.get(j));
+                ll.addView(tv);
+            }
+            else{
+                //ll.addView(row);
+                //row.removeAllViews();
+            }
+        }
+        return ll;
+    }
+    private LinearLayout ListOfPreferred(){
+        LinearLayout list = new LinearLayout(this);
+        list.setOrientation(LinearLayout.VERTICAL);
+        LinearLayout ll6 = showPreferred(pmeats,"meat");
+        LinearLayout ll7 = showPreferred(pveggie,"vegetables");
+        LinearLayout ll8 = showPreferred(pmisc, "extras");
+        ll6.setOrientation(LinearLayout.VERTICAL);
+        ll7.setOrientation(LinearLayout.VERTICAL);
+        ll8.setOrientation(LinearLayout.VERTICAL);
+        list.addView(ll6);
+        list.addView(ll7);
+        list.addView(ll8);
+        return list;
+    }
+
+
 }

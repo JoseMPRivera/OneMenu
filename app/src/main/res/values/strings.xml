@@ -7,7 +7,7 @@
     <string name="vegetable">vegetable</string>
     <string name="misc">misc</string>
 
-<!--ingredients-->
+    <!--ingredients-->
     <!--meats-->
     <string name="chicken">chicken</string>
     <string name="beef">beef</string>
@@ -34,5 +34,8 @@
     <string name="android"> Android </string>
     <string name="signOut"> Sign Out </string>
     <string name="submit">submit</string>
+    <string name="title_activity_foodpref">foodpref</string>
+    <string name="tab_text_1">Tab 1</string>
+    <string name="tab_text_2">Tab 2</string>
 
 </resources>
