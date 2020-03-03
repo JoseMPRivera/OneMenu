@@ -2,6 +2,7 @@ package com.aje.onemenu;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -88,7 +89,7 @@ public class FoodPreference extends AppCompatActivity {
         next.setText(R.string.submit);
         preferenceScreen.addView(next);
         next.setOnClickListener(new View.OnClickListener(){
-            int[] list = {0};
+
             @Override
             public void onClick(View view) {
                 preferenceScreen.removeView(ll2);
@@ -98,6 +99,27 @@ public class FoodPreference extends AppCompatActivity {
                 preferenceScreen.addView(ll2);
 
 
+            }
+        });
+
+        Button fd = new Button(this);
+        fd.setText("FoodDescription");
+        preferenceScreen.addView(fd);
+        fd.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(FoodPreference.this, FoodDescription.class);
+                startActivity(intent);
+            }
+        });
+        Button rList = new Button(this);
+        rList.setText("List of Restaurants");
+        preferenceScreen.addView(rList);
+        rList.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(FoodPreference.this, RestaurantsList.class);
+                startActivity(intent);
             }
         });
 
@@ -140,9 +162,7 @@ public class FoodPreference extends AppCompatActivity {
         misc.add("mayonnaise");
 
     }
-    private void ingredientsView(){
 
-    }
     private LinearLayout showPreference(ArrayList<String> ingredients, final ArrayList<String> pIngredients){
 
         LinearLayout ll = new LinearLayout(this);
@@ -188,22 +208,19 @@ public class FoodPreference extends AppCompatActivity {
         for(int j = 0; j < list.size(); j++ ){
             if(j == 0) {
                 TextView group  = new TextView(this);
-                group.setText(name + ": ");
+                group.setText(new StringBuilder().append(name).append(R.string.colon).toString());
                 group.setMaxLines(1);
                 ll.addView(group);
                 TextView tv = new TextView(this);
                 tv.setText(list.get(j));
                 tv.setMaxLines(1);
                 ll.addView(tv);
-            }else if(j%5 != 0){
+            }else{
                 TextView tv = new TextView(this);
-                tv.setText(", "+list.get(j));
+                tv.setText(new StringBuilder().append(R.string.comma).append(list.get(j)).toString());
                 ll.addView(tv);
             }
-            else{
-                //ll.addView(row);
-                //row.removeAllViews();
-            }
+
         }
         return ll;
     }

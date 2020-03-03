@@ -6,6 +6,10 @@
     <string name="meat">meat</string>
     <string name="vegetable">vegetable</string>
     <string name="misc">misc</string>
+    <string name="comma">, </string>
+    <string name="period">.</string>
+    <string name="colon">: </string>
+
 
     <!--ingredients-->
     <!--meats-->
@@ -37,5 +41,9 @@
     <string name="title_activity_foodpref">foodpref</string>
     <string name="tab_text_1">Tab 1</string>
     <string name="tab_text_2">Tab 2</string>
+
+    <!--    menu sample-->
+    <string name="burger">Burger</string>
+
 
 </resources>
