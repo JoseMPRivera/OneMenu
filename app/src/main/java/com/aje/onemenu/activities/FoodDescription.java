@@ -1,4 +1,4 @@
-package com.aje.onemenu;
+package com.aje.onemenu.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -8,6 +8,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.Toast;
+
+import com.aje.onemenu.R;
 
 public class FoodDescription extends AppCompatActivity {
 

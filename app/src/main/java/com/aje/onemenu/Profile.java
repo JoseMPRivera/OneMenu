@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import com.aje.onemenu.activities.FoodPreference;
+
 public class Profile extends AppCompatActivity {
 
     @Override

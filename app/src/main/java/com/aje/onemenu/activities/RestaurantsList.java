@@ -1,4 +1,4 @@
-package com.aje.onemenu;
+package com.aje.onemenu.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -7,6 +7,8 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
+
+import com.aje.onemenu.R;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;

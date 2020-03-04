@@ -1,4 +1,4 @@
-package com.aje.onemenu;
+package com.aje.onemenu.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
@@ -12,6 +12,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.aje.onemenu.R;
 import com.google.android.material.tabs.TabLayout;
 import java.util.ArrayList;
 
@@ -177,12 +179,6 @@ public class FoodPreference extends AppCompatActivity {
                 public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                     if(b) {
                         pIngredients.add(cb.getText().toString());
-                        Context context = getApplicationContext();
-                        CharSequence text = "selected " + cb.getText();
-                        int duration = Toast.LENGTH_SHORT;
-
-                        Toast toast = Toast.makeText(context, text, duration);
-                        toast.show();
                     }
                     else{
                         pIngredients.remove(cb.getText().toString());

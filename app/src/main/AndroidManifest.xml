@@ -11,12 +11,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".RestaurantsList"></activity>
-        <activity android:name=".FoodDescription" />
-        <activity android:name=".RestaurantsMenu" />
-        <activity android:name=".FoodPreference" />
-        <activity android:name=".ProfileActivity" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".activities.RestaurantsList"></activity>
+        <activity android:name=".activities.FoodDescription" />
+        <activity android:name=".activities.RestaurantsMenu" />
+        <activity android:name=".activities.FoodPreference" />
+        <activity android:name=".activities.ProfileActivity" />
+        <activity android:name=".activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
