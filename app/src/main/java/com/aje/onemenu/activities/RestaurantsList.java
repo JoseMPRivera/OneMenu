@@ -1,63 +1,90 @@
 package com.aje.onemenu.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.app.Activity;
 import android.os.Bundle;
-import android.widget.LinearLayout;
+import android.util.Log;
 import android.widget.ListView;
-import android.widget.SearchView;
-import android.widget.TextView;
+import android.widget.SimpleAdapter;
 
 import com.aje.onemenu.R;
+import com.aje.onemenu.Restaurant;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreSettings;
+import com.google.firebase.firestore.QuerySnapshot;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-/*
-    Search for restaurants
-    Display List of restaurants
- */
-public class RestaurantsList extends AppCompatActivity {
+import java.util.HashMap;
+import java.util.List;
 
-    //change to arraylist<restaurant>
-    private ArrayList<String> rList = new ArrayList<>();
-    public RestaurantsList(){
+public class RestaurantsList extends Activity {
 
-    }
+    private ListView listView;
+    private FirebaseFirestore db;
+    private final ArrayList<String> restaurantNames = new ArrayList<String>();
+    private final ArrayList<String> restaurantDescriptions = new ArrayList<String>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        addRestaurant("In 'n Out");
-        addRestaurant("Burger King");
-        addRestaurant("McDonald's");
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_restaurants_list);
 
-        LinearLayout ll = findViewById(R.id.main);
+        db = FirebaseFirestore.getInstance();
+        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder().setPersistenceEnabled(true).build();
+        db.setFirestoreSettings(settings);
 
-        SearchView sv = new SearchView(this);
-        ll.addView(sv);
-        ListView lv = new ListView(this);
-        ll.addView(lv);
-        LinearLayout ll_list = displayList(rList);
-        ll.addView(ll_list);
+        Log.d("fail","     Database    var     created===============================");
 
+        db.collection("restaurants").get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        if(!queryDocumentSnapshots.isEmpty()){
+                            List<DocumentSnapshot> list=queryDocumentSnapshots.getDocuments();
+
+                            for(DocumentSnapshot d: list){
+
+                                Restaurant p = d.toObject(Restaurant.class);
+                                restaurantNames.add(p.getName());
+                                restaurantDescriptions.add(p.getDescription());
+                            }
+
+                            updateList();
+                        }
+                        else{
+                            Log.d("fail", "fail");
+                        }
+
+                    }
+                });
 
     }
-    private void addRestaurant(String r){
-        //rList.add(Restaurant(r));
-        rList.add(r);
 
-    }
-    private LinearLayout displayList(ArrayList<String> list){
-        LinearLayout ll1 = new LinearLayout(this);
-        ll1.setOrientation(LinearLayout.VERTICAL);
-        for(String x:list){
-            LinearLayout ll2 = new LinearLayout(this);
-            TextView tv = new TextView(this);
-            tv.setText(x);
-            ll2.addView(tv);
-            ll1.addView(ll2);
+    private void updateList(){
+        final ArrayList<Integer> listPhoto = new ArrayList<Integer>();
+
+        for (int i = 0; i < restaurantNames.size(); ++i) {
+            listPhoto.add(R.drawable.ic_restaurant_black_24dp);
         }
-        return ll1;
+
+        List<HashMap<String, String>> aList = new ArrayList<HashMap<String, String>>();
+        for (int i = 0; i < restaurantNames.size(); ++i) {
+
+            HashMap<String, String> hm = new HashMap<>();
+            hm.put("Name", restaurantNames.get(i));
+            hm.put("Description", restaurantDescriptions.get(i));
+            hm.put("Image", Integer.toString(listPhoto.get(i)));
+            aList.add(hm);
+        }
+
+        String[] from = {"Name","Description","Image"};
+        int[] to = {R.id.titleRestaurant, R.id.descRestaurant,R.id.iconRestaurant};
+
+        SimpleAdapter simpleAdapter = new SimpleAdapter(getBaseContext(), aList, R.layout.fragment_restaurant_info, from,to);
+        listView = (ListView)findViewById(R.id.list_view);
+
+        listView.setAdapter(simpleAdapter);
     }
 }
