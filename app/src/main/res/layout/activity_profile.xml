@@ -83,8 +83,24 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
         android:layout_marginStart="323dp"
-        android:layout_marginBottom="44dp"
-        android:text="Button" />
+        android:layout_marginEnd="0dp"
+        android:layout_marginBottom="87dp"
+        android:text="@string/common_signin_button_text" />
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="0dp"
+        app:layout_constraintBottom_toBottomOf="parent">
 
+        <fragment
+            android:id="@+id/fragment"
+            android:name="com.aje.onemenu.fragments.NavBarFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="0dp"
+            app:layout_constraintBottom_toBottomOf="parent" />
+    </LinearLayout>
 </RelativeLayout>

@@ -58,7 +58,7 @@ public class FoodPreference extends AppCompatActivity {
             final RelativeLayout rl = findViewById(R.id.rl);
             //preferenceScreen.addView(rl);
                 final LinearLayout showMeat = showPreference(meats, pmeats);
-        showMeat.setHorizontalGravity(Gravity.CENTER);
+                showMeat.setHorizontalGravity(Gravity.CENTER);
                 final LinearLayout showVeggie = showPreference(veggie, pveggie);
                 final LinearLayout showMisc = showPreference(misc, pmisc);
                 rl.addView(showMeat);
@@ -199,6 +199,9 @@ public class FoodPreference extends AppCompatActivity {
 
     }
 
+    /**
+     *
+     */
     private LinearLayout showPreference(ArrayList<String> ingredients, final ArrayList<String> pIngredients){
 
         LinearLayout ll = new LinearLayout(this);
@@ -230,6 +233,8 @@ public class FoodPreference extends AppCompatActivity {
 
         return ll;
     }
+
+
     private LinearLayout showPreferred(ArrayList<String> list, String name){
         LinearLayout ll = new LinearLayout(this);
         ll.setOrientation(LinearLayout.HORIZONTAL);
