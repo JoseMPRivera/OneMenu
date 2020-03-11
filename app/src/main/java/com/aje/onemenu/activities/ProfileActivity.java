@@ -135,6 +135,7 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
                 @Override
                 public void onResult(@NonNull GoogleSignInResult result) {
                     handleSignInResult(result);
+
                 }
             });
         }

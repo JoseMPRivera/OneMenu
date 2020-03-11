@@ -1,4 +1,4 @@
-package com.aje.onemenu.fragments;
+package com.aje.onemenu.classes;
 
 public class Restaurant {
 
