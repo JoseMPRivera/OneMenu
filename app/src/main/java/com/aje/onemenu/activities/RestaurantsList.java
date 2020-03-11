@@ -56,10 +56,8 @@ public class RestaurantsList extends Activity {
                         else{
                             Log.d("fail", "fail");
                         }
-
                     }
                 });
-
     }
 
     private void updateList(){
