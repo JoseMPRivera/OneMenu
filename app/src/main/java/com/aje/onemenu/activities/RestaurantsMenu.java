@@ -7,7 +7,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.aje.onemenu.R;
-import com.aje.onemenu.classes.Restaurant;
+import com.aje.onemenu.Restaurant;
 import com.google.firebase.database.DatabaseReference; //database reference needed
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;

@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -23,11 +24,13 @@ import com.google.android.gms.common.api.GoogleApiClient;
         SignInButton signInButton;
         private GoogleApiClient googleApiClient;
         private static final int SIGN_IN = 1;
+        SharedPreferences preferences;
 
         @Override
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_main);
+            preferences = getSharedPreferences("myPrefs", MODE_PRIVATE);
 
             GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
 
@@ -57,8 +60,10 @@ import com.google.android.gms.common.api.GoogleApiClient;
                 GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
                 int statusCode = result.getStatus().getStatusCode();
 
-                Toast.makeText(this, "Code: " + statusCode, Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Code: " + result.getSignInAccount(), Toast.LENGTH_LONG).show();
+
                 if(result.isSuccess()){
+    //firebaseAuthWithGoogle(result.getSignInAccount());
                     startActivity(new Intent(MainActivity.this, ProfileActivity.class));
                     finish();
                 }
