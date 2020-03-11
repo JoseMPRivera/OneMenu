@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.aje.onemenu.R;
+import com.aje.onemenu.classes.User;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -21,6 +23,11 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.squareup.picasso.Picasso;
 
 
@@ -33,6 +40,10 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
     private Button signOutButton;
     private Button EdgarButton;
     private Button AlexButton;
+    private Button pushUserFirebase;
+    private FirebaseFirestore db;
+    private User currentUser;
+    private DocumentReference usersInfo;
 
     private GoogleApiClient googleApiClient;
     private GoogleSignInOptions gso;
@@ -45,11 +56,14 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
+        db = FirebaseFirestore.getInstance();
+
         profile_image = findViewById(R.id.profile_image);
         name = findViewById(R.id.name);
         email = findViewById(R.id.email);
         id = findViewById(R.id.id);
         signOutButton = findViewById(R.id.signOutButton);
+        pushUserFirebase = findViewById(R.id.pushUser);
 
         gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
 
@@ -90,6 +104,27 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
                 startActivity(intent);
             }
         });
+
+        pushUserFirebase.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                if(!currentUser.getName().equals(null)){
+                    Log.d("fail", "pushed to database");
+
+                    usersInfo = db.collection("users").document(currentUser.getId());
+                    usersInfo.set(currentUser).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if(task.isSuccessful()){
+                                Toast.makeText(getApplicationContext(), "Account Created", Toast.LENGTH_SHORT);
+                            }
+                            else {
+                                Toast.makeText(getApplicationContext(), "Error, fail to connect to database", Toast.LENGTH_SHORT);
+                            }
+                        }
+                    });
+                }
+            }
+        });
     }
 
     private void gotoMainActivity() {
@@ -104,15 +139,26 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
 
     }
 
+    private void setUserInfo(GoogleSignInAccount account){
+
+        currentUser = new User();
+
+        currentUser.setEmail(account.getEmail());
+        currentUser.setId(account.getId());
+        currentUser.setName(account.getDisplayName());
+
+        name.setText(account.getDisplayName());
+        email.setText(account.getEmail());
+        id.setText(account.getId());
+        Picasso.get().load(account.getPhotoUrl()).placeholder(R.mipmap.ic_launcher).into(profile_image);
+    }
+
     private void handleSignInResult(GoogleSignInResult result) {
         if(result.isSuccess()) {
-            GoogleSignInAccount account = result.getSignInAccount();
 
-            name.setText(account.getDisplayName());
-            email.setText(account.getEmail());
-            id.setText(account.getId());
+//          GoogleSignInAccount account = result.getSignInAccount();
 
-            Picasso.get().load(account.getPhotoUrl()).placeholder(R.mipmap.ic_launcher).into(profile_image);
+            setUserInfo(result.getSignInAccount());
         }
         else {
             gotoMainActivity();

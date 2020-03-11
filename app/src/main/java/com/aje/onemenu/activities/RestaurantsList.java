@@ -7,7 +7,7 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
 import com.aje.onemenu.R;
-import com.aje.onemenu.Restaurant;
+import com.aje.onemenu.classes.Restaurant;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
