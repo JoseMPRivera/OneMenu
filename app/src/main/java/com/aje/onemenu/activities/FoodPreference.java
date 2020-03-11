@@ -1,19 +1,27 @@
 package com.aje.onemenu.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.aje.onemenu.R;
+import com.aje.onemenu.fragments.NavBarFragment;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.tabs.TabLayout;
 import java.util.ArrayList;
 
@@ -28,20 +36,31 @@ public class FoodPreference extends AppCompatActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
+        DisplayMetrics dm = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(dm);
+        float height = dm.widthPixels;
         addMeat();
         addVeggie();
         addMisc();
-        final LinearLayout showMeat = showPreference(meats, pmeats);
-        final LinearLayout showVeggie = showPreference(veggie, pveggie);
-        final LinearLayout showMisc = showPreference(misc, pmisc);
+        this.setContentView(R.layout.activity_food_preference);
 
-        final LinearLayout preferenceScreen = new LinearLayout(this);
-        preferenceScreen.setOrientation(LinearLayout.VERTICAL);
-            final TabLayout tl = new TabLayout(this);
-            preferenceScreen.addView(tl);
-            final RelativeLayout rl = new RelativeLayout(this);
-            preferenceScreen.addView(rl);
+
+        RelativeLayout main = findViewById(R.id.main);
+
+
+        final LinearLayout preferenceScreen = findViewById(R.id.preferenceScreen);
+        //main.addView(preferenceScreen);
+        //preferenceScreen.setOrientation(LinearLayout.VERTICAL);
+            final TabLayout tl = findViewById(R.id.tl);
+            //preferenceScreen.addView(tl);
+            final RelativeLayout rl = findViewById(R.id.rl);
+            //preferenceScreen.addView(rl);
+                final LinearLayout showMeat = showPreference(meats, pmeats);
+        showMeat.setHorizontalGravity(Gravity.CENTER);
+                final LinearLayout showVeggie = showPreference(veggie, pveggie);
+                final LinearLayout showMisc = showPreference(misc, pmisc);
                 rl.addView(showMeat);
                 rl.addView(showVeggie);
                 rl.addView(showMisc);
@@ -49,11 +68,11 @@ public class FoodPreference extends AppCompatActivity {
         showVeggie.setVisibility(View.GONE);
         showMisc.setVisibility(View.GONE);
 
-            final LinearLayout ll2 = new LinearLayout(this);
-            ll2.setOrientation(LinearLayout.VERTICAL);
-            preferenceScreen.addView(ll2);
+            final LinearLayout ll2 = findViewById(R.id.ll2);
+            //ll2.setOrientation(LinearLayout.VERTICAL);
+            //preferenceScreen.addView(ll2);
                 LinearLayout ll3 = showPreferred(pmeats, "meat");
-                ll2.setOrientation(LinearLayout.VERTICAL);
+                //ll2.setOrientation(LinearLayout.VERTICAL);
                 ll2.addView(ll3);
 
             tl.addTab(tl.newTab().setText("Protein"));
@@ -121,15 +140,30 @@ public class FoodPreference extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(FoodPreference.this, RestaurantsList.class);
+
                 startActivity(intent);
             }
         });
 
+//        LinearLayout f = new LinearLayout(this);
+//        f.setGravity(Gravity.BOTTOM);
+//       // FrameLayout fl = new FrameLayout(this);
+//        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+//        //f.setOrientation(LinearLayout.HORIZONTAL)
+//        Fragment navbar = new NavBarFragment();
+//
+//        f.setId((Integer)12345);
+//        ft.add(f.getId(), navbar, "hello").commit();
+//        main.addView(f);
+//        BottomNavigationView =
 
 
 
 
-        this.setContentView(preferenceScreen);
+
+
+
+
     }
     private void addMeat(){
         meats.add("pork");
