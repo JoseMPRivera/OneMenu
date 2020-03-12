@@ -95,9 +95,9 @@
         android:layout_marginBottom="0dp"
         app:layout_constraintBottom_toBottomOf="parent">
 
-        <fragment
+        <androidx.fragment.app.FragmentContainerView
             android:id="@+id/fragment"
-            android:name="com.aje.onemenu.fragments.NavBarFragment"
+            class="com.aje.onemenu.fragments.NavBarFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginBottom="0dp"

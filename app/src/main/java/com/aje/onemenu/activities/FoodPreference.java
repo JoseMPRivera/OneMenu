@@ -1,15 +1,18 @@
 package com.aje.onemenu.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Layout;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -44,6 +47,7 @@ public class FoodPreference extends AppCompatActivity {
         addMeat();
         addVeggie();
         addMisc();
+        addPMeat();
         this.setContentView(R.layout.activity_food_preference);
 
 
@@ -71,9 +75,9 @@ public class FoodPreference extends AppCompatActivity {
             final LinearLayout ll2 = findViewById(R.id.ll2);
             //ll2.setOrientation(LinearLayout.VERTICAL);
             //preferenceScreen.addView(ll2);
-                LinearLayout ll3 = showPreferred(pmeats, "meat");
+//                LinearLayout ll3 = showPreferred(pmeats, "meat");
                 //ll2.setOrientation(LinearLayout.VERTICAL);
-                ll2.addView(ll3);
+//                ll2.addView(ll3);
 
             tl.addTab(tl.newTab().setText("Protein"));
             tl.addTab(tl.newTab().setText("Vegetable"));
@@ -198,9 +202,16 @@ public class FoodPreference extends AppCompatActivity {
         misc.add("mayonnaise");
 
     }
+    private void addPMeat(){
+        pmeats.add("beef");
+        pmeats.add("goat");
+        pmeats.add("tofu");
+        pmeats.add("frog");
+        pmeats.add("eggs");
+    }
 
     /**
-     *
+     *shows the user the list checkbox with preferred ingredients
      */
     private LinearLayout showPreference(ArrayList<String> ingredients, final ArrayList<String> pIngredients){
 
@@ -210,6 +221,9 @@ public class FoodPreference extends AppCompatActivity {
         for (int i = 0; i < ingredients.size(); i++) {
             final CheckBox cb = new CheckBox(getApplicationContext());
             cb.setText(ingredients.get(i));
+            if(pIngredients.contains(ingredients.get(i))){
+                cb.setChecked(true);
+            }
 
             cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
@@ -234,7 +248,9 @@ public class FoodPreference extends AppCompatActivity {
         return ll;
     }
 
-
+    /**
+     * shows the list of preferred meat
+     */
     private LinearLayout showPreferred(ArrayList<String> list, String name){
         LinearLayout ll = new LinearLayout(this);
         ll.setOrientation(LinearLayout.HORIZONTAL);
@@ -243,22 +259,29 @@ public class FoodPreference extends AppCompatActivity {
         for(int j = 0; j < list.size(); j++ ){
             if(j == 0) {
                 TextView group  = new TextView(this);
-                group.setText(new StringBuilder().append(name).append(R.string.colon).toString());
+                group.setText(new StringBuilder().append(name).append(":").toString());
                 group.setMaxLines(1);
+                group.setLayoutParams(new ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
                 ll.addView(group);
                 TextView tv = new TextView(this);
                 tv.setText(list.get(j));
+                tv.setLayoutParams(new ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
                 tv.setMaxLines(1);
                 ll.addView(tv);
             }else{
                 TextView tv = new TextView(this);
-                tv.setText(new StringBuilder().append(R.string.comma).append(list.get(j)).toString());
+                tv.setText(new StringBuilder().append(", ").append(list.get(j)).toString());
+                tv.setWidth(600);
                 ll.addView(tv);
             }
 
         }
         return ll;
     }
+
+    /**
+     * creates linearlayout for the tabs in a relativelayout
+     */
     private LinearLayout ListOfPreferred(){
         LinearLayout list = new LinearLayout(this);
         list.setOrientation(LinearLayout.VERTICAL);
