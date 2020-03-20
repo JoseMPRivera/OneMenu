@@ -17,6 +17,7 @@ import com.aje.onemenu.activities.FoodPreference;
 import com.aje.onemenu.activities.MainActivity;
 import com.aje.onemenu.activities.ProfileActivity;
 import com.aje.onemenu.activities.RestaurantsMenu;
+import com.aje.onemenu.classes.Restaurant;
 import com.aje.onemenu.classes.User;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -89,13 +90,27 @@ public class UserInfoActivity extends AppCompatActivity implements GoogleApiClie
 
     }
 
-    private void setUserInfo(GoogleSignInAccount account){
+    private void setUserInfoFromDatabase(User account){
 
         currentUser = new User();
+        currentUser.setEmail(account.getEmail());
+        currentUser.setId(account.getId());
+        currentUser.setName(account.getName());
 
+        updateUI();
+    }
+
+    private void setUserInfoFromGoogleSignIn(GoogleSignInAccount account){
+
+        currentUser = new User();
         currentUser.setEmail(account.getEmail());
         currentUser.setId(account.getId());
         currentUser.setName(account.getDisplayName());
+
+        updateUI();
+    }
+
+    private void updateUI(){
 
         name.setText(account.getDisplayName());
         email.setText(account.getEmail());
@@ -117,24 +132,30 @@ public class UserInfoActivity extends AppCompatActivity implements GoogleApiClie
                         DocumentSnapshot document = task.getResult();
                         if (document.exists()) {
                             Log.d("UserInfoActivity", "Document exists!");
+
+                            setUserInfoFromDatabase(document.toObject(User.class));
+
                         } else {
-                            setUserInfo(account);
+                            setUserInfoFromGoogleSignIn(account);
                             Log.d("UserInfoActivity", "Document does not exist!");
 
                             usersInfo.set(currentUser).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(Task<Void> task) {
                                     Log.d("successful", "We pushed to db");
+
+                                    String text;
                                     if(task.isSuccessful()){
-                                        String test = "Account created";
-                                        Toast.makeText(getApplicationContext(), test, Toast.LENGTH_SHORT).show();
+                                        text = "Account created";
+                                    } else {
+                                        text = "Error, fail to connect to database";
                                     }
-                                    else {
-                                        Toast.makeText(getApplicationContext(), "Error, fail to connect to database", Toast.LENGTH_SHORT).show();
-                                    }
+
+                                    Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
                                 }
                             });
                         }
+
                     } else {
                         Log.d("UserInfoActivity", "Failed with: ", task.getException());
                     }
@@ -145,6 +166,24 @@ public class UserInfoActivity extends AppCompatActivity implements GoogleApiClie
             Toast.makeText(getApplicationContext(), "Error sign in with Google account", Toast.LENGTH_SHORT).show();
             gotoMainActivity();
         }
+    }
+
+    private void pushUserDatatoDB(){
+
+        usersInfo = db.collection("users").document(currentUser.getId());
+        usersInfo.set(currentUser).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(Task<Void> task) {
+                Log.d("successful", "We pushed to db");
+                if(task.isSuccessful()){
+                    String test = "Account created";
+                    Toast.makeText(getApplicationContext(), test, Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    Toast.makeText(getApplicationContext(), "Error, fail to connect to database", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     @Override
