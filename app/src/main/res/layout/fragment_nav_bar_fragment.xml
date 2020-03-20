@@ -37,20 +37,19 @@
             android:id="@+id/navBar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:tabIndicatorHeight="2dp">
+            app:tabIndicatorHeight="0dp">
 
             <com.google.android.material.tabs.TabItem
                 android:id="@+id/menu_profile"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/menu_profile"
-                android:icon="@android:drawable/ic_menu_manage"/>
+                android:icon="@drawable/ic_account_box_black_24dp"/>
 
             <com.google.android.material.tabs.TabItem
                 android:id="@+id/menu_search"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:icon="@android:drawable/ic_menu_always_landscape_portrait"/>
+                android:icon="@drawable/ic_search_black_24dp"/>
 <!--                android:text="@string/menu_search"-->
 
 
@@ -58,7 +57,7 @@
                 android:id="@+id/menu_settings"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:icon="@android:drawable/ic_menu_preferences"/>
+                android:icon="@drawable/ic_settings_black_24dp"/>
         </com.google.android.material.tabs.TabLayout>
     </LinearLayout>
 
