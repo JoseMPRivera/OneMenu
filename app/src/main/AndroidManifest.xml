@@ -17,6 +17,7 @@
         <activity android:name=".activities.RestaurantsMenu" />
         <activity android:name=".activities.FoodPreference" />
         <activity android:name=".activities.ProfileActivity" />
+        <activity android:name=".settings.UserInfoActivity" />
         <activity android:name=".activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

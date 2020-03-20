@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 
 import com.aje.onemenu.R;
+import com.aje.onemenu.settings.UserInfoActivity;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
@@ -63,8 +64,8 @@ import com.google.android.gms.common.api.GoogleApiClient;
                 Toast.makeText(this, "Code: " + result.getSignInAccount(), Toast.LENGTH_LONG).show();
 
                 if(result.isSuccess()){
-    //firebaseAuthWithGoogle(result.getSignInAccount());
-                    startActivity(new Intent(MainActivity.this, ProfileActivity.class));
+                    //firebaseAuthWithGoogle(result.getSignInAccount());
+                    startActivity(new Intent(MainActivity.this, UserInfoActivity.class));
                     finish();
                 }
                 else {

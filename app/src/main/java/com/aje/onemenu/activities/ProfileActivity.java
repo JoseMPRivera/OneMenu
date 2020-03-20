@@ -108,17 +108,19 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
         pushUserFirebase.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if(!currentUser.getName().equals(null)){
-                    Log.d("fail", "pushed to database");
+                    Log.d("successful", "pushed to database");
 
                     usersInfo = db.collection("users").document(currentUser.getId());
                     usersInfo.set(currentUser).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
-                        public void onComplete(@NonNull Task<Void> task) {
+                        public void onComplete(Task<Void> task) {
+                            Log.d("successful", "We pushed to db");
                             if(task.isSuccessful()){
-                                Toast.makeText(getApplicationContext(), "Account Created", Toast.LENGTH_SHORT);
+                                String test = "Account created";
+                                Toast.makeText(getApplicationContext(), test, Toast.LENGTH_SHORT).show();
                             }
                             else {
-                                Toast.makeText(getApplicationContext(), "Error, fail to connect to database", Toast.LENGTH_SHORT);
+                                Toast.makeText(getApplicationContext(), "Error, fail to connect to database", Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
@@ -157,7 +159,6 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
         if(result.isSuccess()) {
 
 //          GoogleSignInAccount account = result.getSignInAccount();
-
             setUserInfo(result.getSignInAccount());
         }
         else {
