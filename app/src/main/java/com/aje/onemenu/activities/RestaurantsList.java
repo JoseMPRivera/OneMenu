@@ -46,6 +46,8 @@ public class RestaurantsList extends AppCompatActivity {
                     @Override
                     public boolean onQueryTextSubmit(String s) {
                         final RelativeLayout rl = findViewById(R.id.list_Rlayout);
+                        final TextView nullHandler = findViewById(R.id.no_result);
+                        nullHandler.setVisibility(View.GONE);
                         restaurantNames = new ArrayList<String>();
                         restaurantDescriptions = new ArrayList<String>();
 
@@ -59,7 +61,9 @@ public class RestaurantsList extends AppCompatActivity {
                                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                                     @Override
                                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+
                                         if(!queryDocumentSnapshots.isEmpty()){
+                                            nullHandler.setVisibility(View.GONE);
                                             List<DocumentSnapshot> list=queryDocumentSnapshots.getDocuments();
 
                                             for(DocumentSnapshot d: list){
@@ -75,11 +79,9 @@ public class RestaurantsList extends AppCompatActivity {
                                             restaurantNames = new ArrayList<String>();
                                             restaurantDescriptions = new ArrayList<String>();
                                             updateList();
-                                            TextView nullHandler = new TextView(RestaurantsList.this);
-                                            nullHandler.setText("No Result");
-                                            nullHandler.setGravity(Gravity.CENTER);
+                                            nullHandler.setVisibility(View.VISIBLE);
                                             //nullHandler.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-                                            rl.addView(nullHandler);
+
                                         }
                                     }
                                 });
