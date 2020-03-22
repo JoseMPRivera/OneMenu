@@ -13,8 +13,8 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="158dp"
-        android:layout_marginEnd="166dp" />
+        android:layout_marginTop="160dp"
+        android:layout_marginEnd="159dp" />
 
     <TextView
         android:id="@+id/name"
@@ -32,19 +32,20 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="301dp"
+        android:layout_marginBottom="331dp"
         android:text="@string/android"
         android:textSize="22sp" />
 
-    <TextView
-        android:id="@+id/id"
+    <Button
+        android:id="@+id/edith_preferences_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/email"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="225dp"
-        android:text="@string/android"
-        android:textSize="22sp" />
+        android:layout_marginTop="69dp"
+        android:layout_marginBottom="214dp"
+        android:text="@string/preferences_edith" />
 
     <Button
         android:id="@+id/signOutButton"

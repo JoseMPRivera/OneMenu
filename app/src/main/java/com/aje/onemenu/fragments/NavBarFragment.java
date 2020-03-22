@@ -17,8 +17,10 @@ import android.widget.Toast;
 import com.aje.onemenu.Profile;
 import com.aje.onemenu.R;
 import com.aje.onemenu.activities.FoodPreference;
+import com.aje.onemenu.activities.MainActivity;
 import com.aje.onemenu.activities.ProfileActivity;
 import com.aje.onemenu.activities.RestaurantsList;
+import com.aje.onemenu.settings.UserInfoActivity;
 import com.google.android.material.tabs.TabItem;
 import com.google.android.material.tabs.TabLayout;
 
@@ -76,18 +78,18 @@ public class NavBarFragment extends Fragment implements TabLayout.OnTabSelectedL
         switch (tab.getPosition()) {
             case 0:
 
-                Intent intent = new Intent(getActivity(), ProfileActivity.class);
+                Intent intent = new Intent(getActivity(), RestaurantsList.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                 startActivity(intent);
                 break;
             case 1:
-                Intent intent3 = new Intent(getActivity(), RestaurantsList.class);
+                Intent intent3 = new Intent(getActivity(), MainActivity.class);
                 intent3.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                 startActivity(intent3);
 
                 break;
             case 2:
-                Intent intent2 = new Intent(getActivity(), FoodPreference.class);
+                Intent intent2 = new Intent(getActivity(), UserInfoActivity.class);
                 intent2.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
 //                startActivityIfNeeded(intent2, 0);
 //                startActivity(intent2,0);
@@ -109,18 +111,18 @@ public class NavBarFragment extends Fragment implements TabLayout.OnTabSelectedL
         switch (tab.getPosition()) {
             case 0:
 
-                Intent intent = new Intent(getActivity(), ProfileActivity.class);
+                Intent intent = new Intent(getActivity(), RestaurantsList.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                 startActivity(intent);
                 break;
             case 1:
-                Intent intent3 = new Intent(getActivity(), RestaurantsList.class);
+                Intent intent3 = new Intent(getActivity(), MainActivity.class);
                 intent3.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                 startActivity(intent3);
 
                 break;
             case 2:
-                Intent intent2 = new Intent(getActivity(), FoodPreference.class);
+                Intent intent2 = new Intent(getActivity(), UserInfoActivity.class);
                 intent2.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
 //                startActivityIfNeeded(intent2, 0);
 //                startActivity(intent2,0);

@@ -15,9 +15,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.aje.onemenu.R;
 import com.aje.onemenu.activities.FoodPreference;
 import com.aje.onemenu.activities.MainActivity;
-import com.aje.onemenu.activities.ProfileActivity;
-import com.aje.onemenu.activities.RestaurantsMenu;
-import com.aje.onemenu.classes.Restaurant;
 import com.aje.onemenu.classes.User;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -35,17 +32,20 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
+
 public class UserInfoActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener  {
 
     private ImageView profile_image;
     private TextView name;
     private TextView email;
-    private TextView id;
     private Button signOutButton;
     private FirebaseFirestore db;
     private User currentUser;
     private DocumentReference usersInfo;
     private GoogleSignInAccount account;
+    private Button edithPreferences;
+    private boolean loaded; // Checks is the list of ingredients is already loaded from Database
 
     private GoogleApiClient googleApiClient;
     private GoogleSignInOptions gso;
@@ -55,6 +55,7 @@ public class UserInfoActivity extends AppCompatActivity implements GoogleApiClie
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
+        loaded = false;
         gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
         googleApiClient = new GoogleApiClient.Builder(this).enableAutoManage(this,this)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso).build();
@@ -62,8 +63,24 @@ public class UserInfoActivity extends AppCompatActivity implements GoogleApiClie
         profile_image = findViewById(R.id.profile_image);
         name = findViewById(R.id.name);
         email = findViewById(R.id.email);
-        id = findViewById(R.id.id);
         signOutButton = findViewById(R.id.signOutButton);
+        edithPreferences = findViewById(R.id.edith_preferences_button);
+
+        edithPreferences.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(loaded) {
+                    Intent intent = new Intent(UserInfoActivity.this, FoodPreference.class);
+                    intent.putExtra("id", currentUser.getId());
+                    startActivity(intent);
+                }
+                else {
+                    Toast.makeText(UserInfoActivity.this
+                            , "Please wait while we update the data from the database."
+                            , Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
 
         signOutButton.setOnClickListener(new View.OnClickListener()
         {
@@ -112,9 +129,9 @@ public class UserInfoActivity extends AppCompatActivity implements GoogleApiClie
 
     private void updateUI(){
 
+        loaded = true;
         name.setText(account.getDisplayName());
         email.setText(account.getEmail());
-        id.setText(account.getId());
         Picasso.get().load(account.getPhotoUrl()).placeholder(R.mipmap.ic_launcher).into(profile_image);
     }
 
@@ -138,6 +155,13 @@ public class UserInfoActivity extends AppCompatActivity implements GoogleApiClie
                         } else {
                             setUserInfoFromGoogleSignIn(account);
                             Log.d("UserInfoActivity", "Document does not exist!");
+
+                            ArrayList<String> meats = new ArrayList<>();
+                            meats.add("pork");
+                            meats.add("chicken");
+                            meats.add("beef");
+                            meats.add("fish");
+                            currentUser.setProtein(meats);
 
                             usersInfo.set(currentUser).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
@@ -189,7 +213,7 @@ public class UserInfoActivity extends AppCompatActivity implements GoogleApiClie
     @Override
     protected void onStart() {
         super.onStart();
-
+        loaded = false;
         OptionalPendingResult<GoogleSignInResult> opt = Auth.GoogleSignInApi.silentSignIn(googleApiClient);
 
         if(opt.isDone()) {

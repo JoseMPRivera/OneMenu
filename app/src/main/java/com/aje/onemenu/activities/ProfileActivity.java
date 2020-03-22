@@ -36,7 +36,6 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
     private ImageView profile_image;
     private TextView name;
     private TextView email;
-    private TextView id;
     private Button signOutButton;
     private Button EdgarButton;
     private Button AlexButton;
@@ -61,7 +60,6 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
         profile_image = findViewById(R.id.profile_image);
         name = findViewById(R.id.name);
         email = findViewById(R.id.email);
-        id = findViewById(R.id.id);
         signOutButton = findViewById(R.id.signOutButton);
         pushUserFirebase = findViewById(R.id.pushUser);
 
@@ -151,7 +149,6 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
 
         name.setText(account.getDisplayName());
         email.setText(account.getEmail());
-        id.setText(account.getId());
         Picasso.get().load(account.getPhotoUrl()).placeholder(R.mipmap.ic_launcher).into(profile_image);
     }
 

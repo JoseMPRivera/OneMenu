@@ -1,31 +1,34 @@
 package com.aje.onemenu.activities;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Layout;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.aje.onemenu.R;
-import com.aje.onemenu.fragments.NavBarFragment;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.aje.onemenu.classes.User;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
 import java.util.ArrayList;
 
 public class FoodPreference extends AppCompatActivity {
@@ -33,26 +36,26 @@ public class FoodPreference extends AppCompatActivity {
     private ArrayList<String> meats = new ArrayList<>();
     private ArrayList<String> veggie = new ArrayList<>();
     private ArrayList<String> misc = new ArrayList<>();
-    private ArrayList<String> pmeats = new ArrayList<>();
-    private ArrayList<String> pveggie = new ArrayList<>();
-    private ArrayList<String> pmisc = new ArrayList<>();
+    private FirebaseFirestore db;
+    private DocumentReference userPreference;
+    private User user;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
+
+        user = new User();
+        getUserPreferenceInstance();
+
         DisplayMetrics dm = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);
         float height = dm.widthPixels;
+
         addMeat();
         addVeggie();
         addMisc();
-        addPMeat();
         this.setContentView(R.layout.activity_food_preference);
-
-
         RelativeLayout main = findViewById(R.id.main);
-
 
         final LinearLayout preferenceScreen = findViewById(R.id.preferenceScreen);
         //main.addView(preferenceScreen);
@@ -61,10 +64,10 @@ public class FoodPreference extends AppCompatActivity {
             //preferenceScreen.addView(tl);
             final RelativeLayout rl = findViewById(R.id.rl);
             //preferenceScreen.addView(rl);
-                final LinearLayout showMeat = showPreference(meats, pmeats);
+                final LinearLayout showMeat = showPreference(meats, user.getProtein());
                 showMeat.setHorizontalGravity(Gravity.CENTER);
-                final LinearLayout showVeggie = showPreference(veggie, pveggie);
-                final LinearLayout showMisc = showPreference(misc, pmisc);
+                final LinearLayout showVeggie = showPreference(veggie, user.getVegetables());
+                final LinearLayout showMisc = showPreference(misc, user.getExtras());
                 rl.addView(showMeat);
                 rl.addView(showVeggie);
                 rl.addView(showMisc);
@@ -117,13 +120,21 @@ public class FoodPreference extends AppCompatActivity {
 
             @Override
             public void onClick(View view) {
+
                 preferenceScreen.removeView(ll2);
                 ll2.removeAllViews();
                 LinearLayout list = ListOfPreferred();
                 ll2.addView(list);
                 preferenceScreen.addView(ll2);
 
+                try {
+                    //set time in mili
+                    Thread.sleep(2000);
 
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+                finish();
             }
         });
 
@@ -202,13 +213,6 @@ public class FoodPreference extends AppCompatActivity {
         misc.add("mayonnaise");
 
     }
-    private void addPMeat(){
-        pmeats.add("beef");
-        pmeats.add("goat");
-        pmeats.add("tofu");
-        pmeats.add("frog");
-        pmeats.add("eggs");
-    }
 
     /**
      *shows the user the list checkbox with preferred ingredients
@@ -221,7 +225,7 @@ public class FoodPreference extends AppCompatActivity {
         for (int i = 0; i < ingredients.size(); i++) {
             final CheckBox cb = new CheckBox(getApplicationContext());
             cb.setText(ingredients.get(i));
-            if(pIngredients.contains(ingredients.get(i))){
+            if(pIngredients != null && pIngredients.contains(ingredients.get(i))){
                 cb.setChecked(true);
             }
 
@@ -285,9 +289,9 @@ public class FoodPreference extends AppCompatActivity {
     private LinearLayout ListOfPreferred(){
         LinearLayout list = new LinearLayout(this);
         list.setOrientation(LinearLayout.VERTICAL);
-        LinearLayout ll6 = showPreferred(pmeats,"meat");
-        LinearLayout ll7 = showPreferred(pveggie,"vegetables");
-        LinearLayout ll8 = showPreferred(pmisc, "extras");
+        LinearLayout ll6 = showPreferred(user.getProtein(),"meat");
+        LinearLayout ll7 = showPreferred(user.getVegetables(),"vegetables");
+        LinearLayout ll8 = showPreferred(user.getExtras(), "extras");
         ll6.setOrientation(LinearLayout.VERTICAL);
         ll7.setOrientation(LinearLayout.VERTICAL);
         ll8.setOrientation(LinearLayout.VERTICAL);
@@ -296,6 +300,43 @@ public class FoodPreference extends AppCompatActivity {
         list.addView(ll8);
         return list;
     }
+
+    private void getUserPreferenceInstance(){
+
+        Intent intent = getIntent();
+        String account = intent.getStringExtra("id");
+
+        db = FirebaseFirestore.getInstance();
+        userPreference = db.collection("users").document(account);
+        userPreference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        Log.d("Food Menu", "User info exists!");
+
+                        user = document.toObject(User.class);
+                        Log.d("database", "Load ingredients from DB");
+
+                    } else {
+
+                        Toast.makeText(FoodPreference.this
+                                , "Please restart the application. There was an error with" +
+                                        " the database connection.",
+                                Toast.LENGTH_SHORT).show();
+                        Log.d("Food Menu", "User does not exist!");
+                        finish();
+                    }
+
+                } else {
+                    Log.d("UserInfoActivity", "Failed with: ", task.getException());
+                }
+            }
+        });
+
+    }
+
 
 
 }
