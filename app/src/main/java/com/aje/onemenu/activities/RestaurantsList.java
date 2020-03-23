@@ -57,7 +57,8 @@ public class RestaurantsList extends AppCompatActivity {
 
                         Log.d("fail","     Database    var     created===============================");
 
-                        db.collection("restaurants").whereGreaterThanOrEqualTo("name", s).get()
+                        db.collection("restaurants").whereGreaterThanOrEqualTo("name", s.toLowerCase())
+                                .whereLessThanOrEqualTo("name", s.toLowerCase()+"\uF7FF").get()
                                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                                     @Override
                                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
