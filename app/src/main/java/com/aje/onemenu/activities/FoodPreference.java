@@ -142,8 +142,8 @@ public class FoodPreference extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
+                Toast.makeText(getApplicationContext(), "Saving Preferences, Please Wait", Toast.LENGTH_SHORT).show();
                 submitForm();
-                Toast.makeText(FoodPreference.this, "Saving Preferences", Toast.LENGTH_SHORT).show();
                 preferenceScreen.removeView(ll2);
                 ll2.removeAllViews();
                 LinearLayout list = ListOfPreferred();
@@ -151,7 +151,6 @@ public class FoodPreference extends AppCompatActivity {
                 preferenceScreen.addView(ll2);
 
                 try {
-                    //set time in mili
                     Thread.sleep(2000);
 
                 }catch (Exception e){
@@ -254,12 +253,6 @@ public class FoodPreference extends AppCompatActivity {
                     }
                     else{
                         pIngredients.remove(cb.getText().toString());
-                        Context context = getApplicationContext();
-                        CharSequence text = "unselected " + cb.getText();
-                        int duration = Toast.LENGTH_SHORT;
-
-                        Toast toast = Toast.makeText(context, text, duration);
-                        toast.show();
                     }
                 }
             });
