@@ -36,13 +36,32 @@ public class FoodPreference extends AppCompatActivity {
     private ArrayList<String> meats = new ArrayList<>();
     private ArrayList<String> veggie = new ArrayList<>();
     private ArrayList<String> misc = new ArrayList<>();
-    private FirebaseFirestore db;
+    private ArrayList<String> currentSelectionMeats = new ArrayList<>();
+    private ArrayList<String> currentSelectionVeg = new ArrayList<>();
+    private ArrayList<String> currentSelectionMics = new ArrayList<>();
     private DocumentReference userPreference;
     private User user;
+    private FirebaseFirestore db;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Bundle extra = getIntent().getBundleExtra("extra");
+
+        ArrayList<String> temp = (ArrayList<String>) extra.getSerializable("meats");
+        if(temp != null) currentSelectionMeats = temp;
+
+        temp = (ArrayList<String>) extra.getSerializable("vegetables");
+        if(temp != null) currentSelectionVeg = temp;
+
+        temp = (ArrayList<String>) extra.getSerializable("mics");
+        if(temp != null) currentSelectionMics = temp;
+
+        Log.d("SUCCESS",currentSelectionMeats.toString() + currentSelectionMeats.toString());
+
+        db = FirebaseFirestore.getInstance();
+        userPreference = db.collection("users").document(getIntent().getStringExtra("id"));
 
         user = new User();
         getUserPreferenceInstance();
@@ -57,6 +76,8 @@ public class FoodPreference extends AppCompatActivity {
         this.setContentView(R.layout.activity_food_preference);
         RelativeLayout main = findViewById(R.id.main);
 
+        Log.d("CORRECT","This is after DB");
+
         final LinearLayout preferenceScreen = findViewById(R.id.preferenceScreen);
         //main.addView(preferenceScreen);
         //preferenceScreen.setOrientation(LinearLayout.VERTICAL);
@@ -64,10 +85,10 @@ public class FoodPreference extends AppCompatActivity {
             //preferenceScreen.addView(tl);
             final RelativeLayout rl = findViewById(R.id.rl);
             //preferenceScreen.addView(rl);
-                final LinearLayout showMeat = showPreference(meats, user.getProtein());
+                final LinearLayout showMeat = showPreference(meats, currentSelectionMeats);
                 showMeat.setHorizontalGravity(Gravity.CENTER);
-                final LinearLayout showVeggie = showPreference(veggie, user.getVegetables());
-                final LinearLayout showMisc = showPreference(misc, user.getExtras());
+                final LinearLayout showVeggie = showPreference(veggie, currentSelectionVeg);
+                final LinearLayout showMisc = showPreference(misc, currentSelectionMics);
                 rl.addView(showMeat);
                 rl.addView(showVeggie);
                 rl.addView(showMisc);
@@ -121,6 +142,8 @@ public class FoodPreference extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
+                submitForm();
+                Toast.makeText(FoodPreference.this, "Saving Preferences", Toast.LENGTH_SHORT).show();
                 preferenceScreen.removeView(ll2);
                 ll2.removeAllViews();
                 LinearLayout list = ListOfPreferred();
@@ -173,12 +196,6 @@ public class FoodPreference extends AppCompatActivity {
 //        BottomNavigationView =
 
 
-
-
-
-
-
-
     }
     private void addMeat(){
         meats.add("pork");
@@ -225,7 +242,7 @@ public class FoodPreference extends AppCompatActivity {
         for (int i = 0; i < ingredients.size(); i++) {
             final CheckBox cb = new CheckBox(getApplicationContext());
             cb.setText(ingredients.get(i));
-            if(pIngredients != null && pIngredients.contains(ingredients.get(i))){
+            if(!pIngredients.equals(null) && pIngredients.contains(ingredients.get(i))){
                 cb.setChecked(true);
             }
 
@@ -260,26 +277,29 @@ public class FoodPreference extends AppCompatActivity {
         ll.setOrientation(LinearLayout.HORIZONTAL);
         //LinearLayout row = new LinearLayout(this);
 
-        for(int j = 0; j < list.size(); j++ ){
-            if(j == 0) {
-                TextView group  = new TextView(this);
-                group.setText(new StringBuilder().append(name).append(":").toString());
-                group.setMaxLines(1);
-                group.setLayoutParams(new ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-                ll.addView(group);
-                TextView tv = new TextView(this);
-                tv.setText(list.get(j));
-                tv.setLayoutParams(new ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-                tv.setMaxLines(1);
-                ll.addView(tv);
-            }else{
-                TextView tv = new TextView(this);
-                tv.setText(new StringBuilder().append(", ").append(list.get(j)).toString());
-                tv.setWidth(600);
-                ll.addView(tv);
-            }
+        if(list != null){
+            for(int j = 0; j < list.size(); j++ ){
+                if(j == 0) {
+                    TextView group  = new TextView(this);
+                    group.setText(new StringBuilder().append(name).append(":").toString());
+                    group.setMaxLines(1);
+                    group.setLayoutParams(new ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                    ll.addView(group);
+                    TextView tv = new TextView(this);
+                    tv.setText(list.get(j));
+                    tv.setLayoutParams(new ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                    tv.setMaxLines(1);
+                    ll.addView(tv);
+                }else{
+                    TextView tv = new TextView(this);
+                    tv.setText(new StringBuilder().append(", ").append(list.get(j)).toString());
+                    tv.setWidth(600);
+                    ll.addView(tv);
+                }
 
+            }
         }
+
         return ll;
     }
 
@@ -289,9 +309,9 @@ public class FoodPreference extends AppCompatActivity {
     private LinearLayout ListOfPreferred(){
         LinearLayout list = new LinearLayout(this);
         list.setOrientation(LinearLayout.VERTICAL);
-        LinearLayout ll6 = showPreferred(user.getProtein(),"meat");
-        LinearLayout ll7 = showPreferred(user.getVegetables(),"vegetables");
-        LinearLayout ll8 = showPreferred(user.getExtras(), "extras");
+        LinearLayout ll6 = showPreferred(currentSelectionMeats,"meat");
+        LinearLayout ll7 = showPreferred(currentSelectionVeg,"vegetables");
+        LinearLayout ll8 = showPreferred(currentSelectionMics, "extras");
         ll6.setOrientation(LinearLayout.VERTICAL);
         ll7.setOrientation(LinearLayout.VERTICAL);
         ll8.setOrientation(LinearLayout.VERTICAL);
@@ -303,11 +323,10 @@ public class FoodPreference extends AppCompatActivity {
 
     private void getUserPreferenceInstance(){
 
-        Intent intent = getIntent();
-        String account = intent.getStringExtra("id");
+        String id  = userPreference.getId();
+        Log.d("Intent", "The id of the user is: " + id);
+        if(id.equals(null) || userPreference == null) finish();
 
-        db = FirebaseFirestore.getInstance();
-        userPreference = db.collection("users").document(account);
         userPreference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -337,6 +356,13 @@ public class FoodPreference extends AppCompatActivity {
 
     }
 
+    private void submitForm(){
+
+        user.setProtein(currentSelectionMeats);
+        user.setVegetables(currentSelectionVeg);
+        user.setExtras(currentSelectionMics);
+        userPreference.set(user);
+    }
 
 
 }

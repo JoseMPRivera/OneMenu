@@ -70,7 +70,19 @@ public class UserInfoActivity extends AppCompatActivity implements GoogleApiClie
             @Override
             public void onClick(View v) {
                 if(loaded) {
+
+                    Bundle extra = new Bundle();
+//
+                    extra.putSerializable("meats", currentUser.getProtein());
+                    extra.putSerializable("vegetables", currentUser.getVegetables());
+                    extra.putSerializable("mics", currentUser.getExtras());
+//
+                    Log.d("successful", currentUser.getProtein().toString());
+//
                     Intent intent = new Intent(UserInfoActivity.this, FoodPreference.class);
+//
+                    intent.putExtra("extra", extra);
+
                     intent.putExtra("id", currentUser.getId());
                     startActivity(intent);
                 }
@@ -109,11 +121,10 @@ public class UserInfoActivity extends AppCompatActivity implements GoogleApiClie
 
     private void setUserInfoFromDatabase(User account){
 
-        currentUser = new User();
-        currentUser.setEmail(account.getEmail());
-        currentUser.setId(account.getId());
-        currentUser.setName(account.getName());
+        currentUser = account;
 
+        Log.d("Error", "kjsdb sfldjnjds fjdknf isdjjnfdo fiofndif sdfisd fiosd f");
+        Log.d("Error", currentUser.getProtein().toString());
         updateUI();
     }
 
@@ -130,8 +141,8 @@ public class UserInfoActivity extends AppCompatActivity implements GoogleApiClie
     private void updateUI(){
 
         loaded = true;
-        name.setText(account.getDisplayName());
-        email.setText(account.getEmail());
+        name.setText(currentUser.getName());
+        email.setText(currentUser.getEmail());
         Picasso.get().load(account.getPhotoUrl()).placeholder(R.mipmap.ic_launcher).into(profile_image);
     }
 
@@ -155,13 +166,6 @@ public class UserInfoActivity extends AppCompatActivity implements GoogleApiClie
                         } else {
                             setUserInfoFromGoogleSignIn(account);
                             Log.d("UserInfoActivity", "Document does not exist!");
-
-                            ArrayList<String> meats = new ArrayList<>();
-                            meats.add("pork");
-                            meats.add("chicken");
-                            meats.add("beef");
-                            meats.add("fish");
-                            currentUser.setProtein(meats);
 
                             usersInfo.set(currentUser).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override

@@ -11,7 +11,11 @@ public class User {
     private ArrayList<String> vegetables;
     private ArrayList<String> extras;
 
-    public User(){}
+    public User(){
+        protein = new ArrayList<>();
+        vegetables = new ArrayList<>();
+        extras = new ArrayList<>();
+    }
 
     public User(String id) {
         this.id = id;
