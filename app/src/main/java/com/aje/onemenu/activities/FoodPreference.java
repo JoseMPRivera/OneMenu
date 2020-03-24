@@ -151,7 +151,7 @@ public class FoodPreference extends AppCompatActivity {
                 preferenceScreen.addView(ll2);
 
                 try {
-                    Thread.sleep(2000);
+                    Thread.sleep(1500);
 
                 }catch (Exception e){
                     e.printStackTrace();

@@ -15,6 +15,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.aje.onemenu.R;
 import com.aje.onemenu.activities.FoodPreference;
 import com.aje.onemenu.activities.MainActivity;
+import com.aje.onemenu.activities.MealActivity;
+import com.aje.onemenu.classes.Meal;
 import com.aje.onemenu.classes.User;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -46,6 +48,7 @@ public class UserInfoActivity extends AppCompatActivity implements GoogleApiClie
     private GoogleSignInAccount account;
     private Button edithPreferences;
     private boolean loaded; // Checks is the list of ingredients is already loaded from Database
+    private Button edgar;
 
     private GoogleApiClient googleApiClient;
     private GoogleSignInOptions gso;
@@ -72,15 +75,15 @@ public class UserInfoActivity extends AppCompatActivity implements GoogleApiClie
                 if(loaded) {
 
                     Bundle extra = new Bundle();
-//
+
                     extra.putSerializable("meats", currentUser.getProtein());
                     extra.putSerializable("vegetables", currentUser.getVegetables());
                     extra.putSerializable("mics", currentUser.getExtras());
-//
+
                     Log.d("successful", currentUser.getProtein().toString());
-//
+
                     Intent intent = new Intent(UserInfoActivity.this, FoodPreference.class);
-//
+
                     intent.putExtra("extra", extra);
 
                     intent.putExtra("id", currentUser.getId());
@@ -105,6 +108,46 @@ public class UserInfoActivity extends AppCompatActivity implements GoogleApiClie
                             gotoMainActivity();
                         else
                             Toast.makeText(getApplicationContext(), "Log Out Failed.", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        });
+
+        edgar = findViewById(R.id.edgarButton);
+
+        edgar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Meal meal = new Meal();
+
+                db = FirebaseFirestore.getInstance();
+                final DocumentReference mealDocument = db.collection("restaurants").document("dennys")
+                        .collection("dennys_menu").document("beyond_burger");
+
+                mealDocument.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull final Task<DocumentSnapshot> task) {
+
+                        if(task.isSuccessful()){
+                            DocumentSnapshot mealSnap = task.getResult();
+
+                            if(mealSnap.exists()){
+
+                                Log.d("TEST", mealDocument.getPath());
+
+                                Intent intent = new Intent(UserInfoActivity.this, MealActivity.class);
+                                intent.putExtra("path", mealDocument.getPath());
+                                startActivity(intent);
+
+                            }
+
+                            else {
+
+                                Log.d("Document Snapshop", "Error while loading restaurant from database");
+                                finish();
+                            }
+                        }
                     }
                 });
             }

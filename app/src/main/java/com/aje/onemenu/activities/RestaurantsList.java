@@ -31,8 +31,8 @@ public class RestaurantsList extends AppCompatActivity {
 
     private ListView listView;
     private FirebaseFirestore db;
-    private ArrayList<String> restaurantNames = new ArrayList<String>();
-    private ArrayList<String> restaurantDescriptions = new ArrayList<String>();
+    private ArrayList<String> restaurantNames = new ArrayList<>();
+    private ArrayList<String> restaurantDescriptions = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,14 +48,14 @@ public class RestaurantsList extends AppCompatActivity {
                         final RelativeLayout rl = findViewById(R.id.list_Rlayout);
                         final TextView nullHandler = findViewById(R.id.no_result);
                         nullHandler.setVisibility(View.GONE);
-                        restaurantNames = new ArrayList<String>();
-                        restaurantDescriptions = new ArrayList<String>();
+                        restaurantNames = new ArrayList<>();
+                        restaurantDescriptions = new ArrayList<>();
 
                         db = FirebaseFirestore.getInstance();
                         FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder().setPersistenceEnabled(true).build();
                         db.setFirestoreSettings(settings);
 
-                        Log.d("fail","     Database    var     created===============================");
+                        Log.d("SUCCESS","     Database    var     created===============================");
 
                         db.collection("restaurants").whereGreaterThanOrEqualTo("name", s.toLowerCase())
                                 .whereLessThanOrEqualTo("name", s.toLowerCase()+"\uF7FF").get()
@@ -77,8 +77,8 @@ public class RestaurantsList extends AppCompatActivity {
                                             updateList();
                                         }
                                         else{
-                                            restaurantNames = new ArrayList<String>();
-                                            restaurantDescriptions = new ArrayList<String>();
+                                            restaurantNames = new ArrayList<>();
+                                            restaurantDescriptions = new ArrayList<>();
                                             updateList();
                                             nullHandler.setVisibility(View.VISIBLE);
                                             //nullHandler.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
@@ -99,13 +99,13 @@ public class RestaurantsList extends AppCompatActivity {
     }
 
     private void updateList(){
-        final ArrayList<Integer> listPhoto = new ArrayList<Integer>();
+        final ArrayList<Integer> listPhoto = new ArrayList<>();
 
         for (int i = 0; i < restaurantNames.size(); ++i) {
             listPhoto.add(R.drawable.ic_restaurant_black_24dp);
         }
 
-        List<HashMap<String, String>> aList = new ArrayList<HashMap<String, String>>();
+        List<HashMap<String, String>> aList = new ArrayList<>();
         for (int i = 0; i < restaurantNames.size(); ++i) {
 
             HashMap<String, String> hm = new HashMap<>();
@@ -119,7 +119,7 @@ public class RestaurantsList extends AppCompatActivity {
         int[] to = {R.id.titleRestaurant, R.id.descRestaurant,R.id.iconRestaurant};
 
         SimpleAdapter simpleAdapter = new SimpleAdapter(getBaseContext(), aList, R.layout.fragment_restaurant_info, from,to);
-        listView = (ListView)findViewById(R.id.list_view);
+        listView = findViewById(R.id.list_view);
 
         listView.setAdapter(simpleAdapter);
     }
