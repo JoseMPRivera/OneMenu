@@ -9,6 +9,9 @@
     <string name="comma">, </string>
     <string name="period">.</string>
     <string name="colon">: </string>
+    <string name="new_review">New Review</string>
+    <string name="submit_review">Submit Review</string>
+    <string name="choose_photo">Choose Image</string>
 
 
     <!--ingredients-->
@@ -51,6 +54,7 @@
     <string name="menu_profile">profile</string>
     <string name="menu_settings">settings</string>
     <string name="preferences_edith">Food Preferences</string>
+    <string name="add_review">Add Review</string>
 
 
 </resources>

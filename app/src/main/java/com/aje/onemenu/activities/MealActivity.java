@@ -6,6 +6,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 
 import com.aje.onemenu.R;
 import com.aje.onemenu.classes.Meal;
@@ -20,7 +22,7 @@ public class MealActivity extends AppCompatActivity {
     private FirebaseFirestore db;
     private DocumentReference mealInformationReference;
     private Meal mealInformation;
-
+    private Button reviewButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,8 +30,12 @@ public class MealActivity extends AppCompatActivity {
         setContentView(R.layout.activity_meal);
 
         db = FirebaseFirestore.getInstance();
-        String path = getIntent().getStringExtra("path");
+        final String path = getIntent().getStringExtra("path");
+        final String userID = getIntent().getStringExtra("userId");
         mealInformationReference = db.document(path);
+
+
+        reviewButton = findViewById(R.id.review_button);
 
         mealInformationReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -48,5 +54,22 @@ public class MealActivity extends AppCompatActivity {
                 }
             }
         });
+
+        reviewButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(MealActivity.this, FoodDescription.class);
+
+                String restId[] = path.split("/");
+
+                intent.putExtra("userId", userID);
+                intent.putExtra("restaurantId", restId[1] + "/" + restId[restId.length - 1]);
+                startActivity(intent);
+
+            }
+        });
+
+
     }
 }

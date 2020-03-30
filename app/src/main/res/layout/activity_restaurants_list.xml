@@ -18,7 +18,7 @@
         android:layout_height="match_parent"
         android:layout_marginBottom="100dp"
         android:layout_marginHorizontal="40dp"
-        android:layout_marginTop="50dp">>
+        android:layout_marginTop="50dp">
 
         <TextView
             android:id="@+id/no_result"
@@ -39,6 +39,7 @@
         android:id="@+id/list_view"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" />
+
     </RelativeLayout>
     <LinearLayout
         android:layout_width="match_parent"

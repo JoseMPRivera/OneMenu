@@ -49,6 +49,7 @@ public class UserInfoActivity extends AppCompatActivity implements GoogleApiClie
     private Button edithPreferences;
     private boolean loaded; // Checks is the list of ingredients is already loaded from Database
     private Button edgar;
+    private String userID = "";
 
     private GoogleApiClient googleApiClient;
     private GoogleSignInOptions gso;
@@ -138,6 +139,7 @@ public class UserInfoActivity extends AppCompatActivity implements GoogleApiClie
 
                                 Intent intent = new Intent(UserInfoActivity.this, MealActivity.class);
                                 intent.putExtra("path", mealDocument.getPath());
+                                intent.putExtra("userId", userID);
                                 startActivity(intent);
 
                             }
@@ -204,9 +206,12 @@ public class UserInfoActivity extends AppCompatActivity implements GoogleApiClie
                         if (document.exists()) {
                             Log.d("UserInfoActivity", "Document exists!");
 
+                            userID = account.getId();
                             setUserInfoFromDatabase(document.toObject(User.class));
 
                         } else {
+
+                            userID = account.getId();
                             setUserInfoFromGoogleSignIn(account);
                             Log.d("UserInfoActivity", "Document does not exist!");
 
