@@ -124,7 +124,7 @@ public class UserInfoActivity extends AppCompatActivity implements GoogleApiClie
 
                 db = FirebaseFirestore.getInstance();
                 final DocumentReference mealDocument = db.collection("restaurants").document("dennys")
-                        .collection("dennys_menu").document("beyond_burger");
+                        .collection("dennys_menu").document("meatloaf");
 
                 mealDocument.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
