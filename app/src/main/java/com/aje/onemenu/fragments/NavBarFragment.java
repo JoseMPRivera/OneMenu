@@ -19,6 +19,7 @@ import com.aje.onemenu.R;
 import com.aje.onemenu.activities.FoodPreference;
 import com.aje.onemenu.activities.MainActivity;
 import com.aje.onemenu.activities.ProfileActivity;
+import com.aje.onemenu.activities.RestaurantMenuActivity;
 import com.aje.onemenu.activities.RestaurantsList;
 import com.aje.onemenu.settings.UserInfoActivity;
 import com.google.android.material.tabs.TabItem;
@@ -83,7 +84,7 @@ public class NavBarFragment extends Fragment implements TabLayout.OnTabSelectedL
                 startActivity(intent);
                 break;
             case 1:
-                Intent intent3 = new Intent(getActivity(), MainActivity.class);
+                Intent intent3 = new Intent(getActivity(), RestaurantMenuActivity.class);
                 intent3.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                 startActivity(intent3);
 
@@ -116,7 +117,7 @@ public class NavBarFragment extends Fragment implements TabLayout.OnTabSelectedL
                 startActivity(intent);
                 break;
             case 1:
-                Intent intent3 = new Intent(getActivity(), MainActivity.class);
+                Intent intent3 = new Intent(getActivity(), RestaurantMenuActivity.class);
                 intent3.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                 startActivity(intent3);
 

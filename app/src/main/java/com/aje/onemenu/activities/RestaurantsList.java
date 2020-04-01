@@ -120,6 +120,7 @@ public class RestaurantsList extends AppCompatActivity {
 
         SimpleAdapter simpleAdapter = new SimpleAdapter(getBaseContext(), aList, R.layout.fragment_restaurant_info, from,to);
         listView = (ListView)findViewById(R.id.list_view);
+//        listView.setOnItemClickListener
 
         listView.setAdapter(simpleAdapter);
     }

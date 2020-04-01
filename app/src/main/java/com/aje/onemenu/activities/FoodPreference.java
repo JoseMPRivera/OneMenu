@@ -166,7 +166,7 @@ public class FoodPreference extends AppCompatActivity {
         fd.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(FoodPreference.this, FoodDescription.class);
+                Intent intent = new Intent(FoodPreference.this, RestaurantMenuActivity.class);
                 startActivity(intent);
             }
         });
