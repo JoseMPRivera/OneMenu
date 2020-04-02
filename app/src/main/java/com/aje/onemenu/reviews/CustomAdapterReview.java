@@ -1,6 +1,7 @@
 package com.aje.onemenu.reviews;
 
 import android.content.Context;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,20 +12,22 @@ import android.widget.Toast;
 
 import com.aje.onemenu.R;
 import com.bumptech.glide.Glide;
-import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class CustomAdapterReview extends BaseAdapter {
 
-    Context context;
-    ArrayList<Review> reviews;
-    ArrayList<StorageReference> storageReferences;
+    private Context context;
+    private ArrayList<Review> reviews;
+    private HashMap<String, Uri> uriReviews;
+    private ArrayList<String> ids;
 
-    public CustomAdapterReview(Context context, ArrayList<Review> review, ArrayList<StorageReference> s) {
+    public CustomAdapterReview(Context context, ArrayList<Review> reviews, HashMap<String, Uri> uriReviews, ArrayList<String> ids) {
         this.context = context;
-        this.reviews = review;
-        this.storageReferences = s;
+        this.reviews = reviews;
+        this.uriReviews = uriReviews;
+        this.ids = ids;
     }
 
     @Override
@@ -59,9 +62,18 @@ public class CustomAdapterReview extends BaseAdapter {
 
 //        reviewImage.setImageURI(review.getStorageReference());
 
-        Glide.with(this.context)
-                .load(storageReferences.get(position))
-                .into(reviewImage);
+//        Glide.with(this.context)
+//                .load(storageReferences.get(position))
+//                .into(reviewImage);
+
+        if(uriReviews.containsKey(ids.get(position)) ) {
+
+            Glide.with(context)
+                    .load(uriReviews.get(ids.get(position)))
+                    .into(reviewImage);
+        }
+
+        //    reviewImage.setImageURI(uriReview.get(position));
 
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
