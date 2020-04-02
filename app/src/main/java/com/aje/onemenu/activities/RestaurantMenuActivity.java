@@ -24,7 +24,6 @@ import java.util.List;
 
 public class RestaurantMenuActivity extends AppCompatActivity {
 
-    private ArrayList<FoodItem> menuList = new ArrayList<FoodItem>();
     private ArrayList<FoodItem> recommendedList = new ArrayList<FoodItem>();
     private ArrayList<FoodItem> mealList = new ArrayList<FoodItem>();
     private ArrayList<FoodItem> beverageList = new ArrayList<FoodItem>();
@@ -33,6 +32,7 @@ public class RestaurantMenuActivity extends AppCompatActivity {
     private ArrayList<FoodItem> tryList = new ArrayList<FoodItem>();
     private FirebaseFirestore db;
     private String restaurant;
+    private String userID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +51,12 @@ public class RestaurantMenuActivity extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
         FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder().setPersistenceEnabled(true).build();
         db.setFirestoreSettings(settings);
-        restaurant = "dintaifung";
+
+        restaurant = getIntent().getStringExtra("restaurant");
+        if(restaurant == null) restaurant = " ";
+
+
+        userID = getIntent().getStringExtra("userID");
 
 
         populate(restaurant, "appetizers", recommendedLayout, recommendedList);

@@ -1,17 +1,20 @@
 package com.aje.onemenu.activities;
 import androidx.appcompat.app.AppCompatActivity;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.SearchView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -33,12 +36,14 @@ public class RestaurantsList extends AppCompatActivity {
     private FirebaseFirestore db;
     private ArrayList<String> restaurantNames = new ArrayList<>();
     private ArrayList<String> restaurantDescriptions = new ArrayList<>();
+    private String userID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.activity_restaurants_list);
+        userID = getIntent().getStringExtra("userId");
 
         SearchView simpleSearchView = findViewById(R.id.simpleSearchView);
         simpleSearchView.setOnQueryTextListener(
@@ -121,6 +126,24 @@ public class RestaurantsList extends AppCompatActivity {
         SimpleAdapter simpleAdapter = new SimpleAdapter(getBaseContext(), aList, R.layout.fragment_restaurant_info, from,to);
         listView = findViewById(R.id.list_view);
 
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+                HashMap<String, String> item = (HashMap<String, String>) listView.getItemAtPosition(i);
+                String restaurant = (String)item.values().toArray()[2];
+
+
+//                Toast.makeText(RestaurantsList.this, sdi+"", Toast.LENGTH_SHORT).show();
+
+                Intent intent = new Intent(RestaurantsList.this,RestaurantMenuActivity.class);
+                intent.putExtra("restaurant", restaurant);
+                intent.putExtra("id", userID);
+                startActivity(intent);
+            }
+        });
+
         listView.setAdapter(simpleAdapter);
     }
+
 }
