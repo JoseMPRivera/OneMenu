@@ -1,6 +1,7 @@
 package com.aje.onemenu.reviews;
 
 import android.content.Context;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,14 +18,15 @@ import java.util.ArrayList;
 
 public class CustomAdapterReview extends BaseAdapter {
 
-    Context context;
-    ArrayList<Review> reviews;
-    ArrayList<StorageReference> storageReferences;
+    private Context context;
+    private ArrayList<Review> reviews;
+    private ArrayList<StorageReference> storageReferences;
+    private ArrayList<Uri> uriReview;
 
-    public CustomAdapterReview(Context context, ArrayList<Review> review, ArrayList<StorageReference> s) {
+    public CustomAdapterReview(Context context, ArrayList<Review> review, ArrayList<Uri> s) {
         this.context = context;
         this.reviews = review;
-        this.storageReferences = s;
+        this.uriReview = s;
     }
 
     @Override
@@ -59,9 +61,21 @@ public class CustomAdapterReview extends BaseAdapter {
 
 //        reviewImage.setImageURI(review.getStorageReference());
 
-        Glide.with(this.context)
-                .load(storageReferences.get(position))
-                .into(reviewImage);
+//        Glide.with(this.context)
+//                .load(storageReferences.get(position))
+//                .into(reviewImage);
+
+        if((uriReview.size() ) > position ) {
+
+            Glide.with(context)
+                    .load(uriReview.get(position))
+                    .into(reviewImage);
+        }
+
+
+        //    reviewImage.setImageURI(uriReview.get(position));
+
+
 
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
