@@ -151,6 +151,8 @@ public class FoodDescription extends AppCompatActivity{
         String[] path = restaurantID.split("/");
 
         final ArrayList<Review> list = new ArrayList<>();
+        final HashMap<String, Uri> mapReviews = new HashMap<>();
+        final ArrayList<String> ids = new ArrayList<>();
 
         db.collection("reviews").document(path[0]).collection(path[1]).get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
@@ -158,7 +160,11 @@ public class FoodDescription extends AppCompatActivity{
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
 
                         for(DocumentSnapshot d: queryDocumentSnapshots){
+
+                            Log.d("99999999999999999999999999999999999", d.getId());
+
                             list.add(d.toObject(Review.class));
+                            ids.add(d.getId());
                         }
                     }
                 });
@@ -178,10 +184,18 @@ public class FoodDescription extends AppCompatActivity{
                         public void onSuccess(Uri uri) {
 
                             Log.d("FoodDescription", "We are downloading the images");
-                            Log.d("FoodDescription", uri.toString());
+                            Log.d("FoodDescription uri to string", uri.toString());
+                            Log.d("FoodDescription last path", uri.getLastPathSegment());
 
+                            String[] s =  uri.getLastPathSegment().split("/");
+                            String id = s[s.length-1].substring(0, 21);
+                            //id = id[id.length-1].split(".");
+
+                            Log.d("FoodDescription ID", id);
+
+                            mapReviews.put(id, uri);
                             uriList.add(uri);
-                            updateUI(list, uriList);
+                            updateUI(list, mapReviews, ids);
                         }
                     });
 
@@ -193,16 +207,16 @@ public class FoodDescription extends AppCompatActivity{
             @Override
             public void onComplete(@NonNull Task<ListResult> task) {
 
-                updateUI(list, uriList);
+                updateUI(list, mapReviews, ids);
             }
         });
     }
 
-    private void updateUI(ArrayList<Review> list, ArrayList<Uri> uList){
+    private void updateUI(ArrayList<Review> list, HashMap<String, Uri> mapReviewsURI, ArrayList<String> ids){
 
         Log.d("FoodDescription", "We are updating UI");
 
-        listViewReview.setAdapter(new CustomAdapterReview(FoodDescription.this, list, uList));
+        listViewReview.setAdapter(new CustomAdapterReview(FoodDescription.this, list, mapReviewsURI, ids));
     }
 
 
@@ -298,7 +312,8 @@ public class FoodDescription extends AppCompatActivity{
                     });
                 }
             });
-        } else {
+        }
+        else {
 
             String[] restID = restaurantID.split("/");
 

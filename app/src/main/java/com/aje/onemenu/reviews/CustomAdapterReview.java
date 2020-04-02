@@ -12,21 +12,22 @@ import android.widget.Toast;
 
 import com.aje.onemenu.R;
 import com.bumptech.glide.Glide;
-import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class CustomAdapterReview extends BaseAdapter {
 
     private Context context;
     private ArrayList<Review> reviews;
-    private ArrayList<StorageReference> storageReferences;
-    private ArrayList<Uri> uriReview;
+    private HashMap<String, Uri> uriReviews;
+    private ArrayList<String> ids;
 
-    public CustomAdapterReview(Context context, ArrayList<Review> review, ArrayList<Uri> s) {
+    public CustomAdapterReview(Context context, ArrayList<Review> reviews, HashMap<String, Uri> uriReviews, ArrayList<String> ids) {
         this.context = context;
-        this.reviews = review;
-        this.uriReview = s;
+        this.reviews = reviews;
+        this.uriReviews = uriReviews;
+        this.ids = ids;
     }
 
     @Override
@@ -65,17 +66,14 @@ public class CustomAdapterReview extends BaseAdapter {
 //                .load(storageReferences.get(position))
 //                .into(reviewImage);
 
-        if((uriReview.size() ) > position ) {
+        if(uriReviews.containsKey(ids.get(position)) ) {
 
             Glide.with(context)
-                    .load(uriReview.get(position))
+                    .load(uriReviews.get(ids.get(position)))
                     .into(reviewImage);
         }
 
-
         //    reviewImage.setImageURI(uriReview.get(position));
-
-
 
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
