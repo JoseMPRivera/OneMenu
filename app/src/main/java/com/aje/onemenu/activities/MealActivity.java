@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.aje.onemenu.R;
 import com.aje.onemenu.classes.Meal;
@@ -17,12 +18,20 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.Arrays;
+
+
 public class MealActivity extends AppCompatActivity {
 
     private FirebaseFirestore db;
     private DocumentReference mealInformationReference;
     private Meal mealInformation;
     private Button reviewButton;
+    private TextView textViewName;
+    private TextView textViewDescription;
+    private TextView textViewMeat;
+    private TextView textViewVegetable;
+    private TextView textViewExtras;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +55,17 @@ public class MealActivity extends AppCompatActivity {
 
                     if( task.getResult().exists()){
                         mealInformation = task.getResult().toObject(Meal.class);
-                        Log.d("Document Meal Description", mealInformation.getDescription());
+                        textViewName=findViewById(R.id.item_name);
+                        textViewName.setText(mealInformation.getName());
+                        textViewDescription=findViewById(R.id.item_description);
+                        textViewDescription.setText("Description\n" + mealInformation.getDescription());
+                        textViewMeat=findViewById(R.id.item_meat);
+                        textViewMeat.setText("Meat\n"+Arrays.toString(mealInformation.getMeat().toArray()));
+                        textViewVegetable=findViewById(R.id.item_vegetable);
+                        textViewVegetable.setText("Vegetables\n"+Arrays.toString(mealInformation.getVegetable().toArray()));
+                        textViewExtras=findViewById(R.id.item_extras);
+                        textViewExtras.setText("Extras\n"+Arrays.toString(mealInformation.getMeat().toArray()));
+
                     }
                 }
                 else {
