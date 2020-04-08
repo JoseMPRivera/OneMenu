@@ -18,6 +18,7 @@ import com.aje.onemenu.activities.MainActivity;
 import com.aje.onemenu.activities.MealActivity;
 import com.aje.onemenu.classes.Meal;
 import com.aje.onemenu.classes.User;
+import com.aje.onemenu.classes.UserId;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -49,7 +50,6 @@ public class UserInfoActivity extends AppCompatActivity implements GoogleApiClie
     private Button edithPreferences;
     private boolean loaded; // Checks is the list of ingredients is already loaded from Database
     private Button edgar;
-    private String userID = "";
 
     private GoogleApiClient googleApiClient;
     private GoogleSignInOptions gso;
@@ -139,7 +139,6 @@ public class UserInfoActivity extends AppCompatActivity implements GoogleApiClie
 
                                 Intent intent = new Intent(UserInfoActivity.this, MealActivity.class);
                                 intent.putExtra("path", mealDocument.getPath());
-                                intent.putExtra("userId", userID);
                                 startActivity(intent);
 
                             }
@@ -195,6 +194,7 @@ public class UserInfoActivity extends AppCompatActivity implements GoogleApiClie
         if(result.isSuccess()) {
 
           account = result.getSignInAccount();
+          UserId.getInstance().setUserId(account.getId());
 
           db = FirebaseFirestore.getInstance();
           usersInfo = db.collection("users").document(account.getId());
@@ -206,12 +206,10 @@ public class UserInfoActivity extends AppCompatActivity implements GoogleApiClie
                         if (document.exists()) {
                             Log.d("UserInfoActivity", "Document exists!");
 
-                            userID = account.getId();
                             setUserInfoFromDatabase(document.toObject(User.class));
 
                         } else {
 
-                            userID = account.getId();
                             setUserInfoFromGoogleSignIn(account);
                             Log.d("UserInfoActivity", "Document does not exist!");
 

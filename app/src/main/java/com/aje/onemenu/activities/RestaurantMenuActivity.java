@@ -1,10 +1,13 @@
 package com.aje.onemenu.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.widget.HorizontalScrollView;
@@ -24,15 +27,14 @@ import java.util.List;
 
 public class RestaurantMenuActivity extends AppCompatActivity {
 
-    private ArrayList<FoodItem> recommendedList = new ArrayList<FoodItem>();
-    private ArrayList<FoodItem> mealList = new ArrayList<FoodItem>();
-    private ArrayList<FoodItem> beverageList = new ArrayList<FoodItem>();
-    private ArrayList<FoodItem> appetizerList = new ArrayList<FoodItem>();
-    private ArrayList<FoodItem> dessertList = new ArrayList<FoodItem>();
-    private ArrayList<FoodItem> tryList = new ArrayList<FoodItem>();
+    private ArrayList<FoodItem> recommendedList = new ArrayList<>();
+    private ArrayList<FoodItem> mealList = new ArrayList<>();
+    private ArrayList<FoodItem> beverageList = new ArrayList<>();
+    private ArrayList<FoodItem> appetizerList = new ArrayList<>();
+    private ArrayList<FoodItem> dessertList = new ArrayList<>();
+    private ArrayList<FoodItem> tryList = new ArrayList<>();
     private FirebaseFirestore db;
     private String restaurant;
-    private String userID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,10 +57,6 @@ public class RestaurantMenuActivity extends AppCompatActivity {
         restaurant = getIntent().getStringExtra("restaurant");
         if(restaurant == null) restaurant = " ";
 
-
-        userID = getIntent().getStringExtra("userID");
-
-
         populate(restaurant, "appetizers", recommendedLayout, recommendedList);
         populate(restaurant, "meal", mealLayout, mealList);
         populate(restaurant, "appetizers", appetizerLayout, appetizerList);
@@ -71,7 +69,7 @@ public class RestaurantMenuActivity extends AppCompatActivity {
     }
 
     //populate arraylists
-    public void populate(String restaurant, final String foodGroup, final LinearLayout layout, final ArrayList<FoodItem> foodList){
+    public void populate(final String restaurant, final String foodGroup, final LinearLayout layout, final ArrayList<FoodItem> foodList){
 
         db.collection("restaurants").document(restaurant).collection(restaurant+"_menu").whereEqualTo("type", foodGroup).get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
@@ -81,13 +79,14 @@ public class RestaurantMenuActivity extends AppCompatActivity {
                             List<DocumentSnapshot> list=queryDocumentSnapshots.getDocuments();
                             for(DocumentSnapshot d: list){
                                 FoodItem p = d.toObject(FoodItem.class);
+                                p.setPath( "restaurants" + "/" + restaurant + "/" + restaurant+"_menu" +"/"+ d.getId());
                                 //menuList.add(p);
                                 foodList.add(p);
                             }
                             update(foodList, layout, foodGroup);
                         }
                         else{
-
+                            Log.d("RestaurantMenuActivity", "There no such menu in the database" );
                         }
                     }
                 });
@@ -146,7 +145,7 @@ public class RestaurantMenuActivity extends AppCompatActivity {
                 image.setLayoutParams(new LinearLayout.LayoutParams((int)(width*2/5),(int)(width*2/8) ));
             }
             else if(foodGroup.contains("appetizers")) {
-                image.setLayoutParams(new LinearLayout.LayoutParams((int) (width *2/3 ), (int) (width*1/4)));
+                image.setLayoutParams(new LinearLayout.LayoutParams((int) (width *2/3 ), (int) (width/4)));
 
             } else {
                 image.setLayoutParams(new LinearLayout.LayoutParams((int) (width / 5), (int) (width / 5)));
@@ -167,7 +166,26 @@ public class RestaurantMenuActivity extends AppCompatActivity {
             mealitem.setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View view) {
-                    Toast.makeText(RestaurantMenuActivity.this, a.getName(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RestaurantMenuActivity.this, a.getRestaurantMealPath(), Toast.LENGTH_SHORT).show();
+                    Log.d("RESTAURANT MENU ACTIVITY", a.getRestaurantMealPath());
+
+                    if(!a.getRestaurantMealPath().isEmpty()){
+
+                        Log.d("TEST", a.getRestaurantMealPath());
+
+                        Intent intent = new Intent(RestaurantMenuActivity.this, MealActivity.class);
+                        intent.putExtra("path", a.getRestaurantMealPath());
+                        startActivity(intent);
+
+                    }
+
+                    else {
+
+                        Log.d("Document Snapshop", "Error while loading restaurant from database");
+                        finish();
+                    }
+
+
                 }
             });
             layout.addView(mealitem);

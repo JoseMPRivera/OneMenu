@@ -10,6 +10,15 @@ public class FoodItem {
     private ArrayList<String> meat;
     private ArrayList<String> vegetable;
     private ArrayList<String> extras;
+    private String documentPath;
+
+    public void setPath(String path){
+        documentPath = path;
+    }
+
+    public String getRestaurantMealPath(){
+        return documentPath;
+    }
 
     public FoodItem(){}
 

@@ -20,6 +20,7 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.aje.onemenu.R;
+import com.aje.onemenu.classes.UserId;
 import com.aje.onemenu.reviews.CustomAdapterReview;
 import com.aje.onemenu.reviews.Review;
 import com.bumptech.glide.Glide;
@@ -79,8 +80,11 @@ public class FoodDescription extends AppCompatActivity{
         Log.d("FOODDESCRIPTION", "On create loaded");
 
         db = FirebaseFirestore.getInstance();
-        userID = getIntent().getStringExtra("userId");
+        userID = UserId.getInstance().getUserId();
         restaurantID = getIntent().getStringExtra("restaurantId");
+
+        Log.d("Review Activity", userID);
+        Log.d("Review Activity", restaurantID);
 
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();

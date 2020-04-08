@@ -36,14 +36,12 @@ public class RestaurantsList extends AppCompatActivity {
     private FirebaseFirestore db;
     private ArrayList<String> restaurantNames = new ArrayList<>();
     private ArrayList<String> restaurantDescriptions = new ArrayList<>();
-    private String userID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.activity_restaurants_list);
-        userID = getIntent().getStringExtra("userId");
 
         SearchView simpleSearchView = findViewById(R.id.simpleSearchView);
         simpleSearchView.setOnQueryTextListener(
@@ -138,7 +136,6 @@ public class RestaurantsList extends AppCompatActivity {
 
                 Intent intent = new Intent(RestaurantsList.this,RestaurantMenuActivity.class);
                 intent.putExtra("restaurant", restaurant);
-                intent.putExtra("id", userID);
                 startActivity(intent);
             }
         });
