@@ -49,6 +49,14 @@ public class RestaurantMenuActivity extends AppCompatActivity {
         final LinearLayout appetizerLayout = findViewById(R.id.appetizer_list);
         final LinearLayout tryLayout = findViewById(R.id.try_list);
 
+        final LinearLayout recommended_layout = findViewById(R.id.recommended_layout);
+        final LinearLayout meal_layout = findViewById(R.id.meal_layout);
+        final LinearLayout beverage_layout = findViewById(R.id.beverage_layout);
+        final LinearLayout dessert_layout = findViewById(R.id.dessert_layout);
+        final LinearLayout appetizer_layout = findViewById(R.id.appetizer_layout);
+        final LinearLayout try_layout = findViewById(R.id.try_layout);
+
+
         //gather database
         db = FirebaseFirestore.getInstance();
         FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder().setPersistenceEnabled(true).build();
@@ -57,19 +65,19 @@ public class RestaurantMenuActivity extends AppCompatActivity {
         restaurant = getIntent().getStringExtra("restaurant");
         if(restaurant == null) restaurant = " ";
 
-        populate(restaurant, "appetizers", recommendedLayout, recommendedList);
-        populate(restaurant, "meal", mealLayout, mealList);
-        populate(restaurant, "appetizers", appetizerLayout, appetizerList);
-        populate(restaurant, "dessert", dessertLayout, dessertList);
-        populate(restaurant, "drink", beverageLayout, beverageList);
-        populate(restaurant, "try", tryLayout, tryList);
+        populate(restaurant, "appetizers",recommended_layout, recommendedLayout, recommendedList);
+        populate(restaurant, "meal",meal_layout, mealLayout, mealList);
+        populate(restaurant, "appetizers", appetizer_layout,appetizerLayout, appetizerList);
+        populate(restaurant, "dessert",dessert_layout, dessertLayout, dessertList);
+        populate(restaurant, "drink",beverage_layout, beverageLayout, beverageList);
+        populate(restaurant, "try",try_layout, tryLayout, tryList);
 
         HorizontalScrollView sv = findViewById(R.id.meal_scroller);
         sv.scrollTo(0, sv.getBottom());
     }
 
     //populate arraylists
-    public void populate(final String restaurant, final String foodGroup, final LinearLayout layout, final ArrayList<FoodItem> foodList){
+    public void populate(final String restaurant, final String foodGroup, final LinearLayout row, final LinearLayout layout, final ArrayList<FoodItem> foodList) {
 
         db.collection("restaurants").document(restaurant).collection(restaurant+"_menu").whereEqualTo("type", foodGroup).get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
@@ -83,7 +91,7 @@ public class RestaurantMenuActivity extends AppCompatActivity {
                                 //menuList.add(p);
                                 foodList.add(p);
                             }
-                            update(foodList, layout, foodGroup);
+                            update(foodList,row, layout, foodGroup);
                         }
                         else{
                             Log.d("RestaurantMenuActivity", "There no such menu in the database" );
@@ -93,8 +101,12 @@ public class RestaurantMenuActivity extends AppCompatActivity {
     }
     //display whatever is on the arraylist
     //change appetizers to recommended
-    public void update(ArrayList<FoodItem> list ,LinearLayout layout, String foodGroup){
-
+    public void update(ArrayList<FoodItem> list, LinearLayout row, LinearLayout layout, String foodGroup) {
+//        if (foodGroup.contains("dessert")) {
+//            row.setVisibility(View.GONE);
+//            Log.d("list", list.size()+"empty======================================= ");
+//        } else {
+        row.setVisibility(View.VISIBLE);
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
         try {
@@ -105,22 +117,22 @@ public class RestaurantMenuActivity extends AppCompatActivity {
         int width = size.x;
         int height = size.y;
 
-        for(final FoodItem a: list){
+        for (final FoodItem a : list) {
 
             final LinearLayout mealitem = new LinearLayout(this);
             mealitem.setOrientation(LinearLayout.VERTICAL);
             LinearLayout.LayoutParams mealitemParams;
-            if(foodGroup.contains("appetizers")){
-                mealitemParams = new LinearLayout.LayoutParams((int)(width*2/3), LinearLayout.LayoutParams.MATCH_PARENT);
+            if (foodGroup.contains("appetizers")) {
+                mealitemParams = new LinearLayout.LayoutParams((int) (width * 2 / 3), LinearLayout.LayoutParams.MATCH_PARENT);
             } else {
                 mealitemParams = new LinearLayout.LayoutParams((int) (width * 2 / 5), LinearLayout.LayoutParams.MATCH_PARENT);
             }
-            mealitemParams.setMargins(10,0,10,0);
+            mealitemParams.setMargins(10, 0, 10, 0);
             mealitem.setLayoutParams(mealitemParams);
             mealitem.setBackgroundColor(Color.WHITE);
 
             //name
-            if(!(foodGroup.contains("appetizers"))){
+            if (!(foodGroup.contains("appetizers"))) {
                 TextView name = new TextView(this);
                 name.setText(a.getName());
                 name.setTextSize(13);
@@ -129,39 +141,39 @@ public class RestaurantMenuActivity extends AppCompatActivity {
 
             //second layout
             LinearLayout nameAndDescription = new LinearLayout(this);
-            if(foodGroup.contains("meal") || foodGroup.contains("appetizers")){
+            if (foodGroup.contains("meal") || foodGroup.contains("appetizers")) {
                 nameAndDescription.setOrientation(LinearLayout.VERTICAL);
             } else {
                 nameAndDescription.setOrientation(LinearLayout.HORIZONTAL);
             }
             mealitem.addView(nameAndDescription);
-//            nameAndDescription.setBackgroundColor(Color.GRAY);
+            //            nameAndDescription.setBackgroundColor(Color.GRAY);
 
             //picture
             ImageView image = new ImageView(this);
             Drawable myDrawable = getResources().getDrawable(R.drawable.ic_restaurant_black_24dp);
             image.setImageDrawable(myDrawable);
-            if(foodGroup.contains("meal")){
-                image.setLayoutParams(new LinearLayout.LayoutParams((int)(width*2/5),(int)(width*2/8) ));
-            }
-            else if(foodGroup.contains("appetizers")) {
-                image.setLayoutParams(new LinearLayout.LayoutParams((int) (width *2/3 ), (int) (width/4)));
+            if (foodGroup.contains("meal")) {
+                image.setLayoutParams(new LinearLayout.LayoutParams((int) (width * 2 / 5), (int) (height / 8)));
+            } else if (foodGroup.contains("appetizers")) {
+                image.setLayoutParams(new LinearLayout.LayoutParams((int) (width * 2 / 3), (int) (height/ 8)));
 
             } else {
-                image.setLayoutParams(new LinearLayout.LayoutParams((int) (width / 5), (int) (width / 5)));
+                image.setLayoutParams(new LinearLayout.LayoutParams((int) (width / 5), (int) (height / 10)));
             }
             nameAndDescription.addView(image);
 
             //description
-            TextView description  = new TextView(this);
-            if(foodGroup.contains("appetizers")){
+            TextView description = new TextView(this);
+            if (foodGroup.contains("appetizers")) {
                 description.setText(a.getName());
                 description.setText(a.getName());
                 description.setTextSize(13);
-            }else {
+            } else {
                 description.setText(a.getDescription());
                 description.setTextSize(7);
             }
+
             nameAndDescription.addView(description);
             mealitem.setOnClickListener(new View.OnClickListener(){
                 @Override

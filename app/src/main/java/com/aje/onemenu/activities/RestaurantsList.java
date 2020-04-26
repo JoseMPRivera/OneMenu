@@ -36,29 +36,54 @@ public class RestaurantsList extends AppCompatActivity {
     private FirebaseFirestore db;
     private ArrayList<String> restaurantNames = new ArrayList<>();
     private ArrayList<String> restaurantDescriptions = new ArrayList<>();
+    private String userID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.activity_restaurants_list);
+        userID = getIntent().getStringExtra("userId");
+
+        final RelativeLayout rl = findViewById(R.id.list_Rlayout);
+        final TextView nullHandler = findViewById(R.id.no_result);
+        nullHandler.setVisibility(View.GONE);
+
+        db = FirebaseFirestore.getInstance();
+        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder().setPersistenceEnabled(true).build();
+        db.setFirestoreSettings(settings);
+
+        Log.d("SUCCESS","     Database    var     created===============================");
+
+        db.collection("restaurants").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                if(!queryDocumentSnapshots.isEmpty()){
+
+                    List<DocumentSnapshot> list=queryDocumentSnapshots.getDocuments();
+
+                    for(DocumentSnapshot d: list){
+
+                        Restaurant p = d.toObject(Restaurant.class);
+                        restaurantNames.add(p.getName());
+                        restaurantDescriptions.add(p.getDescription());
+                    }
+
+                    updateList();
+                }
+
+            }
+        });
 
         SearchView simpleSearchView = findViewById(R.id.simpleSearchView);
         simpleSearchView.setOnQueryTextListener(
                 new SearchView.OnQueryTextListener() {
                     @Override
                     public boolean onQueryTextSubmit(String s) {
-                        final RelativeLayout rl = findViewById(R.id.list_Rlayout);
-                        final TextView nullHandler = findViewById(R.id.no_result);
+
                         nullHandler.setVisibility(View.GONE);
                         restaurantNames = new ArrayList<>();
                         restaurantDescriptions = new ArrayList<>();
-
-                        db = FirebaseFirestore.getInstance();
-                        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder().setPersistenceEnabled(true).build();
-                        db.setFirestoreSettings(settings);
-
-                        Log.d("SUCCESS","     Database    var     created===============================");
 
                         db.collection("restaurants").whereGreaterThanOrEqualTo("name", s.toLowerCase())
                                 .whereLessThanOrEqualTo("name", s.toLowerCase()+"\uF7FF").get()
@@ -136,6 +161,7 @@ public class RestaurantsList extends AppCompatActivity {
 
                 Intent intent = new Intent(RestaurantsList.this,RestaurantMenuActivity.class);
                 intent.putExtra("restaurant", restaurant);
+                intent.putExtra("id", userID);
                 startActivity(intent);
             }
         });
