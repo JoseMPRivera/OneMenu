@@ -1,14 +1,18 @@
 package com.aje.onemenu.reviews;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.Uri;
+import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.RatingBar;
+import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.aje.onemenu.R;
 import com.bumptech.glide.Glide;
@@ -45,6 +49,7 @@ public class CustomAdapterReview extends BaseAdapter {
         return position;
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
@@ -57,8 +62,10 @@ public class CustomAdapterReview extends BaseAdapter {
 
         TextView reviewText = convertView.findViewById(R.id.review_fragment_textview);
         ImageView reviewImage = convertView.findViewById(R.id.review_fragment_imageview);
+        RatingBar reviewRatingBar = convertView.findViewById(R.id.review_fragment_rating_bar);
 
         reviewText.setText(review.getReview());
+        reviewRatingBar.setRating((float)review.getRating());
 
 //        reviewImage.setImageURI(review.getStorageReference());
 
@@ -75,13 +82,27 @@ public class CustomAdapterReview extends BaseAdapter {
 
         //    reviewImage.setImageURI(uriReview.get(position));
 
-        convertView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+//        final ScrollView scrollView = convertView.findViewById(R.id.scroll_review_text);
 
-                Toast.makeText(context, review.getReview(), Toast.LENGTH_LONG).show();
+        reviewText.setOnTouchListener(new View.OnTouchListener() {
+
+            public boolean onTouch(View v, MotionEvent event) {
+                // Disallow the touch request for parent scroll on touch of child view
+                v.getParent().requestDisallowInterceptTouchEvent(true);
+                return false;
             }
         });
+
+        reviewText.setMovementMethod(new ScrollingMovementMethod());
+
+
+//        convertView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//                Toast.makeText(context, review.getReview(), Toast.LENGTH_LONG).show();
+//            }
+//        });
 
 
         return convertView;

@@ -95,6 +95,7 @@ public class FoodDescription extends AppCompatActivity{
         imageView = findViewById(R.id.food_image_view);
         textReview = findViewById(R.id.get_text_review);
         listViewReview = findViewById(R.id.list_view_reviews);
+        foodRating = 6;
 
         Log.d("FOODDESCRIPTION", "variables asigned");
 
@@ -295,6 +296,7 @@ public class FoodDescription extends AppCompatActivity{
 
                     imageReviewPath = taskSnapshot.getMetadata().getPath();
                     reviewInfo.setUrl(imageReviewPath);
+                    reviewInfo.setRating(foodRating);
                     Log.d("IMAGE PATH", imageReviewPath);
 
                     String[] restID = restaurantID.split("/");

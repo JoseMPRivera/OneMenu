@@ -21,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.aje.onemenu.R;
+import com.aje.onemenu.classes.Ingredients;
 import com.aje.onemenu.classes.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -197,37 +198,13 @@ public class FoodPreference extends AppCompatActivity {
 
     }
     private void addMeat(){
-        meats.add("pork");
-        meats.add("chicken");
-        meats.add("beef");
-        meats.add("fish");
-        meats.add("crab");
-        meats.add("tofu");
-        meats.add("shrimp");
-        meats.add("duck");
-        meats.add("lamb");
-        meats.add("goat");
-        meats.add("lobster");
-        meats.add("bison");
-        meats.add("frog");
-        meats.add("turkey");
-        meats.add("eggs");
-        meats.add("deer");
-
+        meats = Ingredients.getInstance().getMeats();
     }
     private void addVeggie(){
-        veggie.add("lettuce");
-        veggie.add("onion");
-        veggie.add("potato");
-        veggie.add("tomato");
-
+        veggie = Ingredients.getInstance().getVeggie();
     }
     private void addMisc(){
-        misc.add("ketchup");
-        misc.add("mustard");
-        misc.add("bun");
-        misc.add("mayonnaise");
-
+        misc = Ingredients.getInstance().getMisc();
     }
 
     /**

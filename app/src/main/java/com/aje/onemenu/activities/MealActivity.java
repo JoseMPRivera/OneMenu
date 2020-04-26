@@ -105,8 +105,8 @@ public class MealActivity extends AppCompatActivity {
 
                 String restId[] = path.split("/");
 
-                Log.d("ID NOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO", restId[1]);
-                Log.d("MEAL NOOOOOOOOOOOOOOOOOOOOOOOOOOOO", restId[restId.length - 1]);
+//                Log.d("ID NOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO", restId[1]);
+//                Log.d("MEAL NOOOOOOOOOOOOOOOOOOOOOOOOOOOO", restId[restId.length - 1]);
 
                 intent.putExtra("restaurantId", restId[1] + "/" + restId[restId.length - 1]);
                 startActivity(intent);

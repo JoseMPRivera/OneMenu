@@ -17,8 +17,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginBottom="100dp"
-            android:layout_marginHorizontal="40dp"
-            android:layout_marginTop="30dp">
+            android:layout_marginHorizontal="12dp"
+            android:layout_marginTop="20dp">
 
             <ListView
                 android:id="@+id/list_view_reviews"
@@ -86,22 +86,32 @@
 
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/food_description"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="24dp"
-                android:text="" />
+                android:orientation="horizontal">
 
-            <RatingBar
-                android:id="@+id/ratingBar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:numStars="6"
-                android:rating="6"
-                android:stepSize="0.2"/>
+                <TextView
+                    android:textSize="18dp"
+                    android:id="@+id/food_description"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="24dp"
+                    android:text="Food" />
+
+                <RatingBar
+                    android:id="@+id/ratingBar"
+                    android:scaleX="0.7"
+                    android:scaleY="0.7"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:numStars="6"
+                    android:rating="6"
+                    android:stepSize="0.2"/>
+
+            </LinearLayout>
 
             <EditText
                 android:inputType="textMultiLine"
