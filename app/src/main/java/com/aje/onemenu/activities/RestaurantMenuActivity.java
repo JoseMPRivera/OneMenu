@@ -17,16 +17,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.aje.onemenu.R;
 import com.aje.onemenu.classes.FoodItem;
+import com.aje.onemenu.classes.Restaurant;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class RestaurantMenuActivity extends AppCompatActivity {
 
+    private ArrayList<FoodItem> temp = new ArrayList<>();
     private ArrayList<FoodItem> recommendedList = new ArrayList<>();
     private ArrayList<FoodItem> mealList = new ArrayList<>();
     private ArrayList<FoodItem> beverageList = new ArrayList<>();
@@ -35,11 +38,14 @@ public class RestaurantMenuActivity extends AppCompatActivity {
     private ArrayList<FoodItem> tryList = new ArrayList<>();
     private FirebaseFirestore db;
     private String restaurant;
+    private ArrayList<String> userPreference = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_restaurant_food_menu);
+        userPreference = getIntent().getStringArrayListExtra("userRecommendation");
+//        Toast.makeText(this, ""+userPreference.toString(), Toast.LENGTH_SHORT).show();
 
        // ListView menuLayout = findViewById(R.id.list_view);
         final LinearLayout recommendedLayout = findViewById(R.id.recommended_list);
@@ -65,7 +71,7 @@ public class RestaurantMenuActivity extends AppCompatActivity {
         restaurant = getIntent().getStringExtra("restaurant");
         if(restaurant == null) restaurant = " ";
 
-        populate(restaurant, "appetizers",recommended_layout, recommendedLayout, recommendedList);
+        populate(restaurant, "recommended",recommended_layout, recommendedLayout, recommendedList);
         populate(restaurant, "meal",meal_layout, mealLayout, mealList);
         populate(restaurant, "appetizers", appetizer_layout,appetizerLayout, appetizerList);
         populate(restaurant, "dessert",dessert_layout, dessertLayout, dessertList);
@@ -79,25 +85,94 @@ public class RestaurantMenuActivity extends AppCompatActivity {
     //populate arraylists
     public void populate(final String restaurant, final String foodGroup, final LinearLayout row, final LinearLayout layout, final ArrayList<FoodItem> foodList) {
 
-        db.collection("restaurants").document(restaurant).collection(restaurant+"_menu").whereEqualTo("type", foodGroup).get()
-                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                    @Override
-                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        if(!queryDocumentSnapshots.isEmpty()){
-                            List<DocumentSnapshot> list=queryDocumentSnapshots.getDocuments();
-                            for(DocumentSnapshot d: list){
-                                FoodItem p = d.toObject(FoodItem.class);
-                                p.setPath( "restaurants" + "/" + restaurant + "/" + restaurant+"_menu" +"/"+ d.getId());
-                                //menuList.add(p);
-                                foodList.add(p);
+
+        if (foodGroup.equals("recommended")) {
+            if(!userPreference.isEmpty()){
+                for(final String prefMeat: userPreference) {
+                    db.collection("restaurants").document(restaurant).collection(restaurant + "_menu").whereArrayContains("meat", prefMeat).get()
+                            .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                                @Override
+                                public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                    if (!queryDocumentSnapshots.isEmpty()) {
+                                        Toast.makeText(RestaurantMenuActivity.this, "", Toast.LENGTH_SHORT).show();
+
+                                        List<DocumentSnapshot> list = queryDocumentSnapshots.getDocuments();
+
+                                        ArrayList<FoodItem> temp1 = new ArrayList<>();
+                                        for (DocumentSnapshot d : list) {
+                                            int counter= 0;
+                                            FoodItem p = d.toObject(FoodItem.class);
+                                            Toast.makeText(RestaurantMenuActivity.this, "recommeneded"+counter++, Toast.LENGTH_SHORT).show();
+                                            p.setPath("restaurants" + "/" + restaurant + "/" + restaurant + "_menu" + "/" + d.getId());
+//                                            boolean flag = true;
+//                                            for(FoodItem f: foodList){
+//                                                if(f.getName().contains(p.getName())) flag = false;
+//                                                Log.d("Test", "onSuccess: "+ p.getName());
+//                                            }
+//                                            if(flag) {
+                                                foodList.add(p);
+//                                            }
+//                                            temp.add(p);
+
+
+
+                                        }
+//                                        update(foodList, row, layout, foodGroup);
+//
+
+
+                                    }else{
+                                        Toast.makeText(RestaurantMenuActivity.this, "no recommendations", Toast.LENGTH_SHORT).show();
+                                    }
+
+
+                                }
+                            });
+                }
+
+            }
+        }
+        else{
+            db.collection("restaurants").document(restaurant).collection(restaurant + "_menu").whereEqualTo("type", foodGroup).get()
+                    .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                        @Override
+                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                            if (!queryDocumentSnapshots.isEmpty()) {
+                                List<DocumentSnapshot> list = queryDocumentSnapshots.getDocuments();
+                                for (DocumentSnapshot d : list) {
+                                    FoodItem p = d.toObject(FoodItem.class);
+                                    p.setPath("restaurants" + "/" + restaurant + "/" + restaurant + "_menu" + "/" + d.getId());
+                                    //menuList.add(p);
+                                    foodList.add(p);
+                                }
+                                update(foodList, row, layout, foodGroup);
+                                if (foodGroup.contains("meal")){
+                                    ArrayList<FoodItem> temp2 = copyEliminator(recommendedList, temp);
+                                    final LinearLayout recommended_layout2 = findViewById(R.id.recommended_layout);
+                                    final LinearLayout recommendedLayout2 = findViewById(R.id.recommended_list);
+                                    update(temp2, recommended_layout2,recommendedLayout2 ,"recommended");
+                                }
+                            } else {
+                                Log.d("RestaurantMenuActivity", "There no such menu in the database");
                             }
-                            update(foodList,row, layout, foodGroup);
                         }
-                        else{
-                            Log.d("RestaurantMenuActivity", "There no such menu in the database" );
-                        }
-                    }
-                });
+                    });
+        }
+    }
+    //consolidate items in recommended list
+    //cannot sync db query so this is used to eliminate copies
+    public ArrayList<FoodItem> copyEliminator(ArrayList<FoodItem> from, ArrayList<FoodItem> to){
+
+        for(FoodItem fr: from){
+            boolean flag = true;
+            for(FoodItem t: to){
+                if(t.getName().contains(fr.getName())){
+                    flag = false;
+                }
+            }
+            if(flag) to.add(fr);
+        }
+        return to;
     }
     //display whatever is on the arraylist
     //change appetizers to recommended
@@ -117,12 +192,16 @@ public class RestaurantMenuActivity extends AppCompatActivity {
         int width = size.x;
         int height = size.y;
 
+//        if (foodGroup.contains("recommended")){
+//            list = copyEliminator(temp, list);
+//        }
+
         for (final FoodItem a : list) {
 
             final LinearLayout mealitem = new LinearLayout(this);
             mealitem.setOrientation(LinearLayout.VERTICAL);
             LinearLayout.LayoutParams mealitemParams;
-            if (foodGroup.contains("appetizers")) {
+            if (foodGroup.contains("recommended")) {
                 mealitemParams = new LinearLayout.LayoutParams((int) (width * 2 / 3), LinearLayout.LayoutParams.MATCH_PARENT);
             } else {
                 mealitemParams = new LinearLayout.LayoutParams((int) (width * 2 / 5), LinearLayout.LayoutParams.MATCH_PARENT);
@@ -132,7 +211,7 @@ public class RestaurantMenuActivity extends AppCompatActivity {
             mealitem.setBackgroundColor(Color.WHITE);
 
             //name
-            if (!(foodGroup.contains("appetizers"))) {
+            if (!(foodGroup.contains("recommended"))) {
                 TextView name = new TextView(this);
                 name.setText(a.getName());
                 name.setTextSize(13);
@@ -141,7 +220,7 @@ public class RestaurantMenuActivity extends AppCompatActivity {
 
             //second layout
             LinearLayout nameAndDescription = new LinearLayout(this);
-            if (foodGroup.contains("meal") || foodGroup.contains("appetizers")) {
+            if (foodGroup.contains("meal") || foodGroup.contains("recommended")) {
                 nameAndDescription.setOrientation(LinearLayout.VERTICAL);
             } else {
                 nameAndDescription.setOrientation(LinearLayout.HORIZONTAL);
@@ -155,7 +234,7 @@ public class RestaurantMenuActivity extends AppCompatActivity {
             image.setImageDrawable(myDrawable);
             if (foodGroup.contains("meal")) {
                 image.setLayoutParams(new LinearLayout.LayoutParams((int) (width * 2 / 5), (int) (height / 8)));
-            } else if (foodGroup.contains("appetizers")) {
+            } else if (foodGroup.contains("recommended")) {
                 image.setLayoutParams(new LinearLayout.LayoutParams((int) (width * 2 / 3), (int) (height/ 8)));
 
             } else {
@@ -165,7 +244,7 @@ public class RestaurantMenuActivity extends AppCompatActivity {
 
             //description
             TextView description = new TextView(this);
-            if (foodGroup.contains("appetizers")) {
+            if (foodGroup.contains("recommended")) {
                 description.setText(a.getName());
                 description.setText(a.getName());
                 description.setTextSize(13);
