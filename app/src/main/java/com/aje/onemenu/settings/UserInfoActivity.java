@@ -167,7 +167,6 @@ public class UserInfoActivity extends AppCompatActivity implements GoogleApiClie
 
         currentUser = account;
 
-        Log.d("Error", "kjsdb sfldjnjds fjdknf isdjjnfdo fiofndif sdfisd fiosd f");
         Log.d("Error", currentUser.getProtein().toString());
         updateUI();
     }

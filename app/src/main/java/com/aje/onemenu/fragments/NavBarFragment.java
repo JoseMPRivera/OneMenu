@@ -16,9 +16,7 @@ import android.widget.Toast;
 
 import com.aje.onemenu.Profile;
 import com.aje.onemenu.R;
-import com.aje.onemenu.activities.FoodPreference;
 import com.aje.onemenu.activities.MainActivity;
-import com.aje.onemenu.activities.ProfileActivity;
 import com.aje.onemenu.activities.RestaurantMenuActivity;
 import com.aje.onemenu.activities.RestaurantsList;
 import com.aje.onemenu.settings.UserInfoActivity;

@@ -82,58 +82,58 @@ public class FoodPreference extends AppCompatActivity {
         final LinearLayout preferenceScreen = findViewById(R.id.preferenceScreen);
         //main.addView(preferenceScreen);
         //preferenceScreen.setOrientation(LinearLayout.VERTICAL);
-            final TabLayout tl = findViewById(R.id.tl);
-            //preferenceScreen.addView(tl);
-            final RelativeLayout rl = findViewById(R.id.rl);
-            //preferenceScreen.addView(rl);
-                final LinearLayout showMeat = showPreference(meats, currentSelectionMeats);
-                showMeat.setHorizontalGravity(Gravity.CENTER);
-                final LinearLayout showVeggie = showPreference(veggie, currentSelectionVeg);
-                final LinearLayout showMisc = showPreference(misc, currentSelectionMics);
-                rl.addView(showMeat);
-                rl.addView(showVeggie);
-                rl.addView(showMisc);
+        final TabLayout tl = findViewById(R.id.tl);
+        //preferenceScreen.addView(tl);
+        final RelativeLayout rl = findViewById(R.id.rl);
+        //preferenceScreen.addView(rl);
+        final LinearLayout showMeat = showPreference(meats, currentSelectionMeats);
+        showMeat.setHorizontalGravity(Gravity.CENTER);
+        final LinearLayout showVeggie = showPreference(veggie, currentSelectionVeg);
+        final LinearLayout showMisc = showPreference(misc, currentSelectionMics);
+        rl.addView(showMeat);
+        rl.addView(showVeggie);
+        rl.addView(showMisc);
 
         showVeggie.setVisibility(View.GONE);
         showMisc.setVisibility(View.GONE);
 
-            final LinearLayout ll2 = findViewById(R.id.ll2);
-            //ll2.setOrientation(LinearLayout.VERTICAL);
-            //preferenceScreen.addView(ll2);
+        final LinearLayout ll2 = findViewById(R.id.ll2);
+        //ll2.setOrientation(LinearLayout.VERTICAL);
+        //preferenceScreen.addView(ll2);
 //                LinearLayout ll3 = showPreferred(pmeats, "meat");
-                //ll2.setOrientation(LinearLayout.VERTICAL);
+            //ll2.setOrientation(LinearLayout.VERTICAL);
 //                ll2.addView(ll3);
 
-            tl.addTab(tl.newTab().setText("Protein"));
-            tl.addTab(tl.newTab().setText("Vegetable"));
-            tl.addTab(tl.newTab().setText("Extra"));
-            tl.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-                @Override
-                public void onTabSelected(TabLayout.Tab tab) {
-                    switch (tl.getSelectedTabPosition()){
-                        case 0:
-                            showVeggie.setVisibility(View.GONE);
-                            showMeat.setVisibility(View.VISIBLE);
-                            showMisc.setVisibility(View.GONE);
-                            break;
-                        case 1:
-                            showMeat.setVisibility(View.GONE);
-                            showVeggie.setVisibility(View.VISIBLE);
-                            showMisc.setVisibility(View.GONE);
-                            break;
-                        case 2:
-                            showMisc.setVisibility(View.VISIBLE);
-                            showVeggie.setVisibility(View.GONE);
-                            showMeat.setVisibility(View.GONE);
-                    }
-                }
-                @Override
-                public void onTabUnselected(TabLayout.Tab tab) {
-                }
-                @Override
-                public void onTabReselected(TabLayout.Tab tab) {
-                }
-            });
+        tl.addTab(tl.newTab().setText("Protein"));
+        tl.addTab(tl.newTab().setText("Vegetable"));
+        tl.addTab(tl.newTab().setText("Extra"));
+        tl.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+        @Override
+        public void onTabSelected(TabLayout.Tab tab) {
+            switch (tl.getSelectedTabPosition()){
+                case 0:
+                    showVeggie.setVisibility(View.GONE);
+                    showMeat.setVisibility(View.VISIBLE);
+                    showMisc.setVisibility(View.GONE);
+                    break;
+                case 1:
+                    showMeat.setVisibility(View.GONE);
+                    showVeggie.setVisibility(View.VISIBLE);
+                    showMisc.setVisibility(View.GONE);
+                    break;
+                case 2:
+                    showMisc.setVisibility(View.VISIBLE);
+                    showVeggie.setVisibility(View.GONE);
+                    showMeat.setVisibility(View.GONE);
+            }
+        }
+        @Override
+        public void onTabUnselected(TabLayout.Tab tab) {
+        }
+        @Override
+        public void onTabReselected(TabLayout.Tab tab) {
+        }
+        });
 
         Button next = new Button(this);
         next.setText(R.string.submit);
@@ -150,6 +150,15 @@ public class FoodPreference extends AppCompatActivity {
                 LinearLayout list = ListOfPreferred();
                 ll2.addView(list);
                 preferenceScreen.addView(ll2);
+
+                //Starts the python script
+
+                if(!user.getId().isEmpty()){
+                    Client connection = new Client();
+                    connection.setUserID(user.getId());
+                    Log.d("CLIENT SOCKET", "The client is being executed");
+                    connection.execute();
+                }
 
                 try {
                     Thread.sleep(1500);
