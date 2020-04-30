@@ -79,8 +79,9 @@
 
     <TextView
         android:id="@+id/item_description"
-        android:layout_width="match_parent"
-        android:layout_height="165dp"
+        android:layout_width="wrap_content"
+        android:scrollbars = "vertical"
+        android:layout_height="381dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
@@ -90,7 +91,7 @@
         android:layout_marginStart="13dp"
         android:layout_marginTop="227dp"
         android:layout_marginEnd="6dp"
-        android:layout_marginBottom="339dp"
+        android:layout_marginBottom="123dp"
         android:textColor="#000000"
         android:textSize="20sp" />
 

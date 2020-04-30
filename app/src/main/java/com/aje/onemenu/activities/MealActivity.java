@@ -4,7 +4,16 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.method.ScrollingMovementMethod;
+import android.text.style.StrikethroughSpan;
+import android.text.style.StyleSpan;
+import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -29,10 +38,7 @@ public class MealActivity extends AppCompatActivity {
     private Meal mealInformation;
     private Button reviewButton;
     private TextView textViewName;
-    private TextView textViewDescription;
-    private TextView textViewMeat;
-    private TextView textViewVegetable;
-    private TextView textViewExtras;
+    private TextView allInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,20 +55,58 @@ public class MealActivity extends AppCompatActivity {
         mealInformationReference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
-
                 if(documentSnapshot.exists()){
 
                     mealInformation = documentSnapshot.toObject(Meal.class);
                     textViewName=findViewById(R.id.item_name);
                     textViewName.setText(mealInformation.getName());
-                    textViewDescription=findViewById(R.id.item_description);
-                    textViewDescription.setText("Description\n" + mealInformation.getDescription());
-                    textViewMeat=findViewById(R.id.item_meat);
-                    textViewMeat.setText("Meat\n"+Arrays.toString(mealInformation.getMeat().toArray()));
-                    textViewVegetable=findViewById(R.id.item_vegetable);
-                    textViewVegetable.setText("Vegetables\n"+Arrays.toString(mealInformation.getVegetable().toArray()));
-                    textViewExtras=findViewById(R.id.item_extras);
-                    textViewExtras.setText("Extras\n"+Arrays.toString(mealInformation.getMeat().toArray()));
+
+                    allInfo= findViewById(R.id.item_description);
+                    StringBuilder meatList= new StringBuilder();
+                    for (String a: mealInformation.getMeat()){
+                        meatList.append(a + "\n");
+                    }
+                    StringBuilder vegetableList= new StringBuilder();
+                    for (String a: mealInformation.getVegetable()){
+                        vegetableList.append(a + "\n");
+                    }
+                    StringBuilder extrasList= new StringBuilder();
+                    for (String a: mealInformation.getExtras()){
+                        extrasList.append(a + "\n");
+                    }
+                    SpannableString description = new SpannableString("Description");
+                    SpannableString meat = new SpannableString("Meat");
+                    SpannableString vegetable = new SpannableString("Vegetable");
+                    SpannableString extras = new SpannableString("Extras");
+                    StyleSpan bold = new StyleSpan(Typeface.BOLD);
+                    StyleSpan bold1 = new StyleSpan(Typeface.BOLD);
+                    StyleSpan bold2 = new StyleSpan(Typeface.BOLD);
+                    StyleSpan bold3 = new StyleSpan(Typeface.BOLD);
+                    description.setSpan(bold, 0, 11, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    meat.setSpan(bold1, 0, 4, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    vegetable.setSpan(bold2, 0, 9, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    extras.setSpan(bold3, 0, 6, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    allInfo.setMovementMethod(new ScrollingMovementMethod());
+
+                    SpannableStringBuilder completeInfo= new SpannableStringBuilder();
+                    completeInfo.append(description);
+                    completeInfo.append("\n" + mealInformation.getDescription()+ "\n\n");
+                    if(meatList.length()>1){
+                        completeInfo.append(meat);
+                        completeInfo.append("\n"+ meatList+"\n");
+                    }
+                    if(vegetableList.length()>1){
+                        completeInfo.append(vegetable);
+                        completeInfo.append("\n"+vegetableList+"\n");
+                    }
+                    if(extrasList.length()>1){
+                        completeInfo.append(extras);
+                        completeInfo.append("\n"+ extrasList);
+                    }
+
+                    allInfo.setText( completeInfo);
+
+
                 }else {
                     Log.d("Connection Failed", "We were unable to get the document Meal from db");
                 }
