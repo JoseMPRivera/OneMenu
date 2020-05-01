@@ -26,4 +26,59 @@
         android:layout_marginEnd="21dp"
         app:srcCompat="@drawable/logo" />
 
+    <TextView
+        android:id="@+id/item_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="-2dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="1dp"
+        android:layout_marginBottom="21dp"
+        android:gravity="center"
+        android:text="One Menu. All Restaurants"
+
+        android:fontFamily="@font/vegan"
+        android:textSize="14sp" />
+
+    <ImageView
+        android:id="@+id/facebook"
+        android:layout_width="108dp"
+        android:layout_height="65dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="35dp"
+        android:layout_marginTop="545dp"
+        android:layout_marginEnd="268dp"
+        app:srcCompat="@drawable/ic_facebook" />
+
+    <ImageView
+        android:id="@+id/twitter"
+        android:layout_width="108dp"
+        android:layout_height="65dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="152dp"
+        android:layout_marginTop="545dp"
+        android:layout_marginEnd="151dp"
+        app:srcCompat="@drawable/ic_twitter" />
+
+    <ImageView
+        android:id="@+id/instagram"
+        android:layout_width="108dp"
+        android:layout_height="65dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="267dp"
+        android:layout_marginTop="543dp"
+        android:layout_marginEnd="35dp"
+        app:srcCompat="@drawable/ic_instagram" />
+
 </RelativeLayout>
