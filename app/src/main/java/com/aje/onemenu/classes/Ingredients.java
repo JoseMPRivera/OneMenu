@@ -1,6 +1,7 @@
 package com.aje.onemenu.classes;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class Ingredients {
 
@@ -26,6 +27,12 @@ public class Ingredients {
         meats.add("eggs");
         meats.add("deer");
 
+        meats.add("sausage");
+        meats.add("salmon");
+        meats.add("bacon");
+        meats.add("octopus");
+
+        Collections.sort(meats);
     }
     private void addVeggie(){
         veggie.add("lettuce");
@@ -33,6 +40,26 @@ public class Ingredients {
         veggie.add("potato");
         veggie.add("tomato");
 
+        veggie.add("edamame");
+        veggie.add("cilantro");
+        veggie.add("celery");
+        veggie.add("tomato");
+
+        veggie.add("cucumber");
+        veggie.add("peas");
+        veggie.add("pepper");
+        veggie.add("tomato");
+        veggie.add("mushroom");
+        veggie.add("avocado");
+
+        veggie.add("basil");
+        veggie.add("arugula");
+        veggie.add("asparagus");
+        veggie.add("carrot");
+        veggie.add("tulipe");
+        veggie.add("spinach");
+
+        Collections.sort(veggie);
     }
     private void addMisc(){
         misc.add("ketchup");
@@ -40,6 +67,23 @@ public class Ingredients {
         misc.add("bun");
         misc.add("mayonnaise");
 
+        misc.add("sesame oil");
+        misc.add("beancurd");
+        misc.add("chili");
+        misc.add("bean");
+        misc.add("pasta");
+
+        misc.add("black tea");
+        misc.add("pancake");
+        misc.add("cheese");
+        misc.add("bread");
+        misc.add("pickle");
+        misc.add("herb");
+        misc.add("tortilla");
+        misc.add("rice");
+        misc.add("sour cream");
+
+        Collections.sort(misc);
     }
 
     private static Ingredients instance = null;

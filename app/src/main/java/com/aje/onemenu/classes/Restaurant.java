@@ -7,15 +7,17 @@ public class Restaurant {
     private String description;
     private String website;
     private String phoneNumber;
+    private String cuisine;
 
     public Restaurant(){}
 
-    public Restaurant(String name, String address, String description, String website, String phoneNumber) {
+    public Restaurant(String name, String address, String description, String website, String phoneNumber, String cuisine) {
         this.name = name;
         this.address = address;
         this.description = description;
         this.website = website;
         this.phoneNumber = phoneNumber;
+        this.cuisine = cuisine;
     }
 
     public String getName() {
@@ -56,5 +58,13 @@ public class Restaurant {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    public String getCuisine() {
+        return cuisine;
+    }
+
+    public void setCuisine(String cuisine) {
+        this.cuisine = cuisine;
     }
 }

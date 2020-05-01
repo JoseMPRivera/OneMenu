@@ -194,7 +194,7 @@ public class RestaurantsList extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
-                HashMap<String, String> item = (HashMap<String, String>) listView.getItemAtPosition(i);
+                HashMap<String, String> item = (HashMap<String, String>) listView .getItemAtPosition(i);
                 String restaurant = (String)item.values().toArray()[2];
 
 

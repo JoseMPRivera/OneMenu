@@ -94,7 +94,7 @@ public class RestaurantMenuActivity extends AppCompatActivity {
                                 @Override
                                 public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                                     if (!queryDocumentSnapshots.isEmpty()) {
-                                        Toast.makeText(RestaurantMenuActivity.this, "", Toast.LENGTH_SHORT).show();
+                                      //  Toast.makeText(RestaurantMenuActivity.this, "", Toast.LENGTH_SHORT).show();
 
                                         List<DocumentSnapshot> list = queryDocumentSnapshots.getDocuments();
 
@@ -102,7 +102,7 @@ public class RestaurantMenuActivity extends AppCompatActivity {
                                         for (DocumentSnapshot d : list) {
                                             int counter= 0;
                                             FoodItem p = d.toObject(FoodItem.class);
-                                            Toast.makeText(RestaurantMenuActivity.this, "recommeneded"+counter++, Toast.LENGTH_SHORT).show();
+                                            //Toast.makeText(RestaurantMenuActivity.this, "recommeneded"+counter++, Toast.LENGTH_SHORT).show();
                                             p.setPath("restaurants" + "/" + restaurant + "/" + restaurant + "_menu" + "/" + d.getId());
 //                                            boolean flag = true;
 //                                            for(FoodItem f: foodList){
@@ -257,7 +257,7 @@ public class RestaurantMenuActivity extends AppCompatActivity {
             mealitem.setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View view) {
-                    Toast.makeText(RestaurantMenuActivity.this, a.getRestaurantMealPath(), Toast.LENGTH_SHORT).show();
+                   // Toast.makeText(RestaurantMenuActivity.this, a.getRestaurantMealPath(), Toast.LENGTH_SHORT).show();
                     Log.d("RESTAURANT MENU ACTIVITY", a.getRestaurantMealPath());
 
                     if(!a.getRestaurantMealPath().isEmpty()){
