@@ -1,7 +1,9 @@
 package com.aje.onemenu.activities;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -18,15 +20,20 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.aje.onemenu.CustomAdapterRestaurant;
 import com.aje.onemenu.R;
 import com.aje.onemenu.classes.Restaurant;
 import com.aje.onemenu.classes.User;
 import com.aje.onemenu.classes.UserId;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,6 +43,8 @@ public class RestaurantsList extends AppCompatActivity {
 
     private ListView listView;
     private FirebaseFirestore db;
+    private ArrayList<Restaurant> restaurantsArray = new ArrayList<>();
+    private HashMap<String, Uri> uriImages = new HashMap<>();
     private ArrayList<String> restaurantNames = new ArrayList<>();
     private ArrayList<String> restaurantDescriptions = new ArrayList<>();
     private String userID;
@@ -55,6 +64,7 @@ public class RestaurantsList extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
         FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder().setPersistenceEnabled(true).build();
         db.setFirestoreSettings(settings);
+        listView = findViewById(R.id.list_view);
 
         db.collection("users").whereEqualTo("id", userID).get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
@@ -108,9 +118,11 @@ public class RestaurantsList extends AppCompatActivity {
                         Restaurant p = d.toObject(Restaurant.class);
                         restaurantNames.add(p.getName());
                         restaurantDescriptions.add(p.getDescription());
+                        restaurantsArray.add(p);
                     }
 
-                    updateList();
+                    loadUris();
+                    //updateList();
                 }
 
             }
@@ -143,12 +155,12 @@ public class RestaurantsList extends AppCompatActivity {
                                                 restaurantDescriptions.add(p.getDescription());
                                             }
 
-                                            updateList();
+                                            //updateList();
                                         }
                                         else{
                                             restaurantNames = new ArrayList<>();
                                             restaurantDescriptions = new ArrayList<>();
-                                            updateList();
+                                            //updateList();
                                             nullHandler.setVisibility(View.VISIBLE);
                                             //nullHandler.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
@@ -188,7 +200,6 @@ public class RestaurantsList extends AppCompatActivity {
         int[] to = {R.id.titleRestaurant, R.id.descRestaurant,R.id.iconRestaurant};
 
         SimpleAdapter simpleAdapter = new SimpleAdapter(getBaseContext(), aList, R.layout.fragment_restaurant_info, from,to);
-        listView = findViewById(R.id.list_view);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
             @Override
@@ -211,4 +222,64 @@ public class RestaurantsList extends AppCompatActivity {
         listView.setAdapter(simpleAdapter);
     }
 
+    private void loadUris(){
+
+        if(restaurantsArray.size() > 0){
+
+            for(Restaurant r: restaurantsArray){
+
+                FirebaseStorage storage = FirebaseStorage.getInstance();
+                StorageReference storageReference = storage.getReference().child("restaurants/").child(r.getName() + "/").child("icon.png");
+
+                storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+
+                        Log.d("RestaurantList last path", uri.getLastPathSegment());
+
+                        String[] s =  uri.getLastPathSegment().split("/");
+                        String id = s[1];
+
+                        Log.d("=================================== RestaurantList uri to string", id);
+
+                        uriImages.put(id, uri);
+                        updateUI();
+
+                    }
+                }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Uri> task) {
+
+                        updateUI();
+                    }
+                });
+            }
+        }
+
+
+
+    }
+
+    private void updateUI(){
+
+        CustomAdapterRestaurant customAdapterRestaurant =
+                new CustomAdapterRestaurant(RestaurantsList.this, restaurantsArray, uriImages);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                Restaurant restaurant = (Restaurant) listView.getItemAtPosition(position);
+
+                Intent intent = new Intent(RestaurantsList.this, RestaurantMenuActivity.class);
+                intent.putExtra("restaurant", restaurant.getName());
+                intent.putStringArrayListExtra("userRecommendation", userRecommendation);
+                startActivity(intent);
+            }
+        });
+
+        listView.setAdapter(customAdapterRestaurant);
+
+
+    }
 }
