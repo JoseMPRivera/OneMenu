@@ -58,8 +58,6 @@ public class RestaurantsList extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.activity_restaurants_list);
         userID = UserId.getInstance().getUserId();
-//        Toast.makeText(this, ""+userID, Toast.LENGTH_SHORT).show();
-//        db.collection("users").whereEqualTo("id", userID).get()
 
         db = FirebaseFirestore.getInstance();
         FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder().setPersistenceEnabled(true).build();
@@ -89,21 +87,12 @@ public class RestaurantsList extends AppCompatActivity {
                 }
             }
         });
-//        if(listOfUsers.isEmpty()) Toast.makeText(this, "empty", Toast.LENGTH_SHORT).show();
 
-
-
-//        Toast.makeText(RestaurantsList.this, ""+user.getId()+" " +user.getName(), Toast.LENGTH_SHORT).show();
-
-//        Toast.makeText(this, ""+user.toString(), Toast.LENGTH_SHORT).show();
 
         final RelativeLayout rl = findViewById(R.id.list_Rlayout);
         final TextView nullHandler = findViewById(R.id.no_result);
         nullHandler.setVisibility(View.GONE);
 
-
-
-        Log.d("SUCCESS",userID+ "     Database    var     created===============================");
 
         //need to add .whereequalto("cuisine", cuisine)
         db.collection("restaurants").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
@@ -122,7 +111,6 @@ public class RestaurantsList extends AppCompatActivity {
                     }
 
                     loadUris();
-                    //updateList();
                 }
 
             }
@@ -178,49 +166,6 @@ public class RestaurantsList extends AppCompatActivity {
         );
 
     }
-
-//    private void updateList(){
-//        final ArrayList<Integer> listPhoto = new ArrayList<>();
-//
-//        for (int i = 0; i < restaurantNames.size(); ++i) {
-//            listPhoto.add(R.drawable.ic_restaurant_black_24dp);
-//        }
-//
-//        List<HashMap<String, String>> aList = new ArrayList<>();
-//        for (int i = 0; i < restaurantNames.size(); ++i) {
-//
-//            HashMap<String, String> hm = new HashMap<>();
-//            hm.put("Name", restaurantNames.get(i));
-//            hm.put("Description", restaurantDescriptions.get(i));
-//            hm.put("Image", Integer.toString(listPhoto.get(i)));
-//            aList.add(hm);
-//        }
-//
-//        String[] from = {"Name","Description","Image"};
-//        int[] to = {R.id.titleRestaurant, R.id.descRestaurant,R.id.iconRestaurant};
-//
-//        SimpleAdapter simpleAdapter = new SimpleAdapter(getBaseContext(), aList, R.layout.fragment_restaurant_info, from,to);
-//
-//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
-//            @Override
-//            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-//
-//                HashMap<String, String> item = (HashMap<String, String>) listView .getItemAtPosition(i);
-//                String restaurant = (String)item.values().toArray()[2];
-//
-//
-////                Toast.makeText(RestaurantsList.this, sdi+"", Toast.LENGTH_SHORT).show();
-//
-//                Intent intent = new Intent(RestaurantsList.this,RestaurantMenuActivity.class);
-//                intent.putExtra("restaurant", restaurant);
-//                intent.putExtra("id", userID);
-//                intent.putStringArrayListExtra("userRecommendation", userRecommendation);
-//                startActivity(intent);
-//            }
-//        });
-//
-//        listView.setAdapter(simpleAdapter);
-//    }
 
     private void loadUris(){
 
