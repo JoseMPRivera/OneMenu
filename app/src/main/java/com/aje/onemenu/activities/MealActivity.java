@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -17,16 +18,21 @@ import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.aje.onemenu.R;
 import com.aje.onemenu.classes.Meal;
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.ListResult;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.Arrays;
 
@@ -39,16 +45,20 @@ public class MealActivity extends AppCompatActivity {
     private Button reviewButton;
     private TextView textViewName;
     private TextView allInfo;
+    private ImageView imageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_meal);
 
+        imageView = findViewById(R.id.meal_image);
         db = FirebaseFirestore.getInstance();
         final String path = getIntent().getStringExtra("path");
-        mealInformationReference = db.document(path);
 
+        String[] idFireStorage = path.split("/");
+        getUriImage(idFireStorage[1] + "/" + idFireStorage[3]);
+        mealInformationReference = db.document(path);
 
         reviewButton = findViewById(R.id.review_button);
 
@@ -157,7 +167,46 @@ public class MealActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    private void getUriImage(String id){
+
+        Log.e("================================================",
+                id);
+
+        final String[] s = id.split("/");
+
+        StorageReference sReference = FirebaseStorage.getInstance().getReference()
+                .child("restaurants/" + s[0] + "/");
+
+        Log.e("99999999999999999999999999999999999999999999999999",
+                s[0]);
+
+        sReference.listAll().addOnSuccessListener(new OnSuccessListener<ListResult>() {
+            @Override
+            public void onSuccess(ListResult listResult) {
+
+                for(StorageReference item : listResult.getItems()){
+
+                    String[] a =  item.getPath().split("/");
+                    String aa = a[3];
+                    String aaa = aa.substring(0, aa.length() - 4);
+
+                    if(s[1].equals(aaa)){
+
+                        item.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            @Override
+                            public void onSuccess(Uri uri) {
+                                Glide.with(MealActivity.this)
+                                        .load(uri)
+                                        .into(imageView);
 
 
+                            }
+                        });
+                    }
+                }
+            }
+        });
     }
 }
