@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Display;
@@ -18,11 +19,16 @@ import android.widget.Toast;
 import com.aje.onemenu.R;
 import com.aje.onemenu.classes.FoodItem;
 import com.aje.onemenu.classes.Restaurant;
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.ListResult;
+import com.google.firebase.storage.StorageReference;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -39,6 +45,7 @@ public class RestaurantMenuActivity extends AppCompatActivity {
     private FirebaseFirestore db;
     private String restaurant;
     private ArrayList<String> userPreference = new ArrayList<>();
+    private HashMap<String, Uri> urisMenu = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,7 +129,7 @@ public class RestaurantMenuActivity extends AppCompatActivity {
 
 
                                     }else{
-                                        Toast.makeText(RestaurantMenuActivity.this, "no recommendations", Toast.LENGTH_SHORT).show();
+                                        //Toast.makeText(RestaurantMenuActivity.this, "no recommendations", Toast.LENGTH_SHORT).show();
                                     }
 
 
@@ -181,6 +188,10 @@ public class RestaurantMenuActivity extends AppCompatActivity {
 //            row.setVisibility(View.GONE);
 //            Log.d("list", list.size()+"empty======================================= ");
 //        } else {
+
+        if(urisMenu.isEmpty())
+            getUris(list, row, layout, foodGroup);
+
         row.setVisibility(View.VISIBLE);
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
@@ -230,8 +241,32 @@ public class RestaurantMenuActivity extends AppCompatActivity {
 
             //picture
             ImageView image = new ImageView(this);
-            Drawable myDrawable = getResources().getDrawable(R.drawable.ic_restaurant_black_24dp);
-            image.setImageDrawable(myDrawable);
+
+            Log.i("==============================================",
+                    a.getRestaurantMealPath());
+            //restaurants/pinoybbq/pinoybbq_menu/Adobo
+
+            String[] s =  a.getRestaurantMealPath().split("/");
+            String id = s[s.length - 1];
+
+            Log.i("77777777777777777777777777777777777",
+                    String.valueOf(urisMenu.containsKey(id)) + String.valueOf(urisMenu.size()));
+
+            if(urisMenu.containsKey(id)){
+
+                Glide.with(RestaurantMenuActivity.this)
+                        .load(urisMenu.get(id))
+                        .into(image);
+
+            } else {
+
+                Drawable myDrawable = getResources().getDrawable(R.drawable.ic_restaurant_black_24dp);
+                image.setImageDrawable(myDrawable);
+
+            }
+
+
+
             if (foodGroup.contains("meal")) {
                 image.setLayoutParams(new LinearLayout.LayoutParams((int) (width * 2 / 5), (int) (height / 8)));
             } else if (foodGroup.contains("recommended")) {
@@ -281,5 +316,40 @@ public class RestaurantMenuActivity extends AppCompatActivity {
             });
             layout.addView(mealitem);
         }
+    }
+
+    private void getUris(ArrayList<FoodItem> list, LinearLayout row, LinearLayout layout, String foodGroup){
+
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference listRef = storage.getReference().child("restaurants/" + restaurant);
+
+        listRef.listAll().addOnSuccessListener(new OnSuccessListener<ListResult>() {
+            @Override
+            public void onSuccess(ListResult listResult) {
+
+                for (StorageReference item : listResult.getItems()) {
+
+                    ///restaurants/dintaifung/beef_soup.jpg
+
+                    item.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+
+                            String[] s =  uri.getLastPathSegment().split("/");
+                            String temp = s[s.length - 1];
+                            String id = temp.substring(0, temp.length() - 4);
+
+                            urisMenu.put(id, uri);
+
+                        }
+                    });
+
+//                    /restaurants/dintaifung/beef_soup.jpg
+
+                }
+            }
+        });
+
+        //update(list, row, layout, foodGroup);
     }
 }

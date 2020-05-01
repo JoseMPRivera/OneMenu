@@ -6,11 +6,11 @@
     android:layout_height="match_parent">
 
 
-    <SearchView
-        android:id="@+id/simpleSearchView"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:queryHint="search for restaurants"/>
+<!--    <SearchView-->
+<!--        android:id="@+id/simpleSearchView"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="40dp"-->
+<!--        android:queryHint="search for restaurants"/>-->
 
     <RelativeLayout
         android:id="@+id/list_Rlayout"
