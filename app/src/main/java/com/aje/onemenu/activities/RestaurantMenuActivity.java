@@ -1,5 +1,6 @@
 package com.aje.onemenu.activities;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -20,7 +21,9 @@ import com.aje.onemenu.R;
 import com.aje.onemenu.classes.FoodItem;
 import com.aje.onemenu.classes.Restaurant;
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
@@ -46,15 +49,16 @@ public class RestaurantMenuActivity extends AppCompatActivity {
     private String restaurant;
     private ArrayList<String> userPreference = new ArrayList<>();
     private HashMap<String, Uri> urisMenu = new HashMap<>();
+    private HashMap<String, ImageView> imageViewHashMap= new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_restaurant_food_menu);
+        restaurant = getIntent().getStringExtra("restaurant");
         userPreference = getIntent().getStringArrayListExtra("userRecommendation");
-//        Toast.makeText(this, ""+userPreference.toString(), Toast.LENGTH_SHORT).show();
+        getUris();
 
-       // ListView menuLayout = findViewById(R.id.list_view);
         final LinearLayout recommendedLayout = findViewById(R.id.recommended_list);
         final LinearLayout mealLayout = findViewById(R.id.main_list);
         final LinearLayout beverageLayout = findViewById(R.id.beverage_list);
@@ -75,7 +79,6 @@ public class RestaurantMenuActivity extends AppCompatActivity {
         FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder().setPersistenceEnabled(true).build();
         db.setFirestoreSettings(settings);
 
-        restaurant = getIntent().getStringExtra("restaurant");
         if(restaurant == null) restaurant = " ";
 
         populate(restaurant, "recommended",recommended_layout, recommendedLayout, recommendedList);
@@ -184,13 +187,6 @@ public class RestaurantMenuActivity extends AppCompatActivity {
     //display whatever is on the arraylist
     //change appetizers to recommended
     public void update(ArrayList<FoodItem> list, LinearLayout row, LinearLayout layout, String foodGroup) {
-//        if (foodGroup.contains("dessert")) {
-//            row.setVisibility(View.GONE);
-//            Log.d("list", list.size()+"empty======================================= ");
-//        } else {
-
-        if(urisMenu.isEmpty())
-            getUris(list, row, layout, foodGroup);
 
         row.setVisibility(View.VISIBLE);
         Display display = getWindowManager().getDefaultDisplay();
@@ -249,22 +245,24 @@ public class RestaurantMenuActivity extends AppCompatActivity {
             String[] s =  a.getRestaurantMealPath().split("/");
             String id = s[s.length - 1];
 
-            Log.i("77777777777777777777777777777777777",
-                    String.valueOf(urisMenu.containsKey(id)) + String.valueOf(urisMenu.size()));
+            Log.e("=========", id);
+            imageViewHashMap.put(id.replaceAll("\\s+|\\r|\\n|\\t", ""), image);
 
-            if(urisMenu.containsKey(id)){
+//            if(urisMenu.containsKey(id)){
+//
+//                Glide.with(RestaurantMenuActivity.this)
+//                        .load(urisMenu.get(id))
+//                        .into(image);
+//
+//            } else {
+//
+//                Drawable myDrawable = getResources().getDrawable(R.drawable.ic_restaurant_black_24dp);
+//                image.setImageDrawable(myDrawable);
+//
+//            }
 
-                Glide.with(RestaurantMenuActivity.this)
-                        .load(urisMenu.get(id))
-                        .into(image);
-
-            } else {
-
-                Drawable myDrawable = getResources().getDrawable(R.drawable.ic_restaurant_black_24dp);
-                image.setImageDrawable(myDrawable);
-
-            }
-
+            Drawable myDrawable = getResources().getDrawable(R.drawable.ic_restaurant_black_24dp);
+            image.setImageDrawable(myDrawable);
 
 
             if (foodGroup.contains("meal")) {
@@ -289,6 +287,9 @@ public class RestaurantMenuActivity extends AppCompatActivity {
             }
 
             nameAndDescription.addView(description);
+
+
+
             mealitem.setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View view) {
@@ -316,9 +317,11 @@ public class RestaurantMenuActivity extends AppCompatActivity {
             });
             layout.addView(mealitem);
         }
+
+        setImage();
     }
 
-    private void getUris(ArrayList<FoodItem> list, LinearLayout row, LinearLayout layout, String foodGroup){
+    private void getUris(){
 
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference listRef = storage.getReference().child("restaurants/" + restaurant);
@@ -339,17 +342,36 @@ public class RestaurantMenuActivity extends AppCompatActivity {
                             String temp = s[s.length - 1];
                             String id = temp.substring(0, temp.length() - 4);
 
-                            urisMenu.put(id, uri);
+                            Log.e("555555555555555555555555555555555555555", id);
 
+                            urisMenu.put(id.replaceAll("\\s+|\\r|\\n|\\t", ""), uri);
+                        }
+                    }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Uri> task) {
+                            setImage();
                         }
                     });
-
 //                    /restaurants/dintaifung/beef_soup.jpg
 
                 }
             }
         });
 
-        //update(list, row, layout, foodGroup);
+        setImage();
+    }
+
+    private void setImage(){
+
+        for ( String id : urisMenu.keySet() ) {
+            if (imageViewHashMap.containsKey(id)) {
+
+                ImageView imageView = imageViewHashMap.get(id);
+
+                Glide.with(RestaurantMenuActivity.this)
+                        .load(urisMenu.get(id))
+                        .into(imageView);
+            }
+        }
     }
 }
