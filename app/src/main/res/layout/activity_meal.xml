@@ -6,9 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".activities.MealActivity">
 
-
-<!--     Edgar add your code here-->
-
     <TextView
         android:id="@+id/item_name"
         android:layout_width="match_parent"
