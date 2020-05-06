@@ -43,12 +43,10 @@ public class Ingredients {
         veggie.add("edamame");
         veggie.add("cilantro");
         veggie.add("celery");
-        veggie.add("tomato");
 
         veggie.add("cucumber");
         veggie.add("peas");
         veggie.add("pepper");
-        veggie.add("tomato");
         veggie.add("mushroom");
         veggie.add("avocado");
 
