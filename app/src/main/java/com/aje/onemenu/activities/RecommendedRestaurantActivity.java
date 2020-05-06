@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.aje.onemenu.CustomAdapterRestaurant;
 import com.aje.onemenu.R;
@@ -41,6 +42,7 @@ public class RecommendedRestaurantActivity extends AppCompatActivity {
     private StorageReference storageReference;
     private HashMap<String, Uri> uriImages;
     private ArrayList<String> recommendationArray;
+    private TextView resultTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +53,7 @@ public class RecommendedRestaurantActivity extends AppCompatActivity {
         restaurantList = new ArrayList<>();
         db = FirebaseFirestore.getInstance();
         recommendationArray = new ArrayList<>();
+        resultTextView = findViewById(R.id.recommendation_textview_noresult);
 
         db.collection("recommendations").document(UserId.getInstance().getUserId()).get()
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
@@ -146,6 +149,8 @@ public class RecommendedRestaurantActivity extends AppCompatActivity {
 
         if(restaurantList.size() > 0){
 
+            resultTextView.setText("");
+
             uriImages = new HashMap<>();
 
             for(Restaurant r: restaurantList){
@@ -178,6 +183,9 @@ public class RecommendedRestaurantActivity extends AppCompatActivity {
                 });
             }
         } else {
+
+            resultTextView.setText("There is no recommendations for you at this time. " +
+                    " Please change your preferences to make a new analysis. ");
 
         }
     }

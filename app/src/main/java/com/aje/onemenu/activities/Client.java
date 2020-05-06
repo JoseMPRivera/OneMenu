@@ -20,7 +20,7 @@ public  class Client extends AsyncTask<Void ,Void , Void > {
     @Override
     protected Void doInBackground(Void... voids)
     {
-        final String adress = "34.94.222.68";
+        final String adress = "35.225.24.218"; //"34.94.222.68";
         final int Port = 8444;
         Log.d("Connection","trying to create connection");
         try {
