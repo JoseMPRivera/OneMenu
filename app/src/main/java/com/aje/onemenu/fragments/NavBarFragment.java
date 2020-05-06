@@ -116,7 +116,7 @@ public class NavBarFragment extends Fragment implements TabLayout.OnTabSelectedL
                 startActivity(intent);
                 break;
             case 1:
-                Intent intent3 = new Intent(getActivity(), RestaurantMenuActivity.class);
+                Intent intent3 = new Intent(getActivity(), RecommendedRestaurantActivity.class);
                 intent3.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                 startActivity(intent3);
 
