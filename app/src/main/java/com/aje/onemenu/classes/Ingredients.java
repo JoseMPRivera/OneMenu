@@ -26,6 +26,7 @@ public class Ingredients {
         meats.add("turkey");
         meats.add("eggs");
         meats.add("deer");
+        meats.add("catfish");
 
         meats.add("sausage");
         meats.add("salmon");
@@ -63,8 +64,10 @@ public class Ingredients {
         veggie.add("zucchini");
         veggie.add("scallion");
         veggie.add("olives");
-
-
+        veggie.add("bitter melon");
+        veggie.add("okra");
+        veggie.add("eggplant");
+        veggie.add("calamansi");
 
         Collections.sort(veggie);
     }
@@ -73,7 +76,6 @@ public class Ingredients {
         misc.add("mustard");
         misc.add("bun");
         misc.add("mayonnaise");
-
         misc.add("sesame oil");
         misc.add("beancurd");
         misc.add("chili");
@@ -105,21 +107,10 @@ public class Ingredients {
         misc.add("cayenne");
         misc.add("honey");
         misc.add("paprika");
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        misc.add("soy sauce");
+        misc.add("vinegar");
+        misc.add("fish sauce");
+        misc.add("oregano");
 
 
 
