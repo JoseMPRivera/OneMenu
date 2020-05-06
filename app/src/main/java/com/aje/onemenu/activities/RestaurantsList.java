@@ -135,20 +135,25 @@ public class RestaurantsList extends AppCompatActivity {
                                         if(!queryDocumentSnapshots.isEmpty()){
                                             nullHandler.setVisibility(View.GONE);
                                             List<DocumentSnapshot> list=queryDocumentSnapshots.getDocuments();
+                                            restaurantsArray = new ArrayList<>();
+                                            restaurantNames = new ArrayList<>();
+                                            restaurantDescriptions = new ArrayList<>();
 
                                             for(DocumentSnapshot d: list){
 
                                                 Restaurant p = d.toObject(Restaurant.class);
+                                                restaurantsArray.add(p);
                                                 restaurantNames.add(p.getName());
                                                 restaurantDescriptions.add(p.getDescription());
                                             }
 
-                                            //updateList();
+                                            updateUI();
                                         }
                                         else{
+                                            restaurantsArray = new ArrayList<>();
                                             restaurantNames = new ArrayList<>();
                                             restaurantDescriptions = new ArrayList<>();
-                                            //updateList();
+                                            updateUI();
                                             nullHandler.setVisibility(View.VISIBLE);
                                             //nullHandler.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
